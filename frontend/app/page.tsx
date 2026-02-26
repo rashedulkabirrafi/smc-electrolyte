@@ -47,16 +47,16 @@ export default async function Home() {
 
   return (
     <main>
-      <div style={{ marginBottom: "1.5rem" }}>
+      <section className="hero-panel" data-reveal>
         <h1>Bangladesh Heatwave Risk Dashboard</h1>
         <p style={{ color: "#64748b", margin: 0, fontSize: "0.95rem" }}>
           Real-time district heatwave intensity · 7-day forecast · Population exposure · SMC activation priority
         </p>
-      </div>
+      </section>
 
       {/* Summary stats bar */}
       {hotspots.length > 0 && (
-        <section style={{
+        <section data-reveal style={{
           background: "linear-gradient(135deg, #fff9f5 0%, #fff7ed 50%, #fffbf5 100%)",
           border: "1px solid #fed7aa",
           borderRadius: "0.75rem",
@@ -123,7 +123,7 @@ export default async function Home() {
         </section>
       )}
 
-      <section className="card" style={{ padding: "0", overflow: "hidden" }}>
+      <section data-reveal className="card" style={{ padding: "0", overflow: "hidden" }}>
         <div style={{ padding: "1rem 1.25rem", borderBottom: "1px solid #e2e8f0", background: "linear-gradient(180deg, #f8fafc 0%, #fff 100%)" }}>
           <h2 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 600 }}>Heatwave Intensity Map</h2>
         </div>
