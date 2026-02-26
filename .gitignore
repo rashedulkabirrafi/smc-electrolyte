@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .venv/
+.venv_validate/
 .pytest_cache/
 .mypy_cache/
 
@@ -10,6 +11,7 @@ __pycache__/
 node_modules/
 .next/
 out/
+*.tsbuildinfo
 
 # Env / local
 .env

@@ -146,6 +146,12 @@ export default function BoundaryMap() {
 
   const center = useMemo<[number, number]>(() => [23.685, 90.3563], []);
 
+  // Force GeoJSON layer to remount when data or view changes (react-leaflet limitation)
+  const layerKey = useMemo(
+    () => `${viewMode}-${level}-${selectedDate}-${forecastDate}-${exposureMetric}`,
+    [viewMode, level, selectedDate, forecastDate, exposureMetric],
+  );
+
   const exposureColor = (value: number, metric: ExposureMetric): string => {
     const v = Number.isFinite(value) ? value : 0;
     if (metric === "population") {
@@ -329,7 +335,33 @@ export default function BoundaryMap() {
           />
           {filteredLayer && (
             <GeoJSON
+              key={layerKey}
               data={filteredLayer as any}
+              onEachFeature={(feature, leafletLayer) => {
+                const p = feature?.properties ?? {};
+                let label = "";
+                if (viewMode === "historical") {
+                  const name = p.district_name ?? p.district_name_x ?? "Unknown";
+                  const tmax = p.tmax_c !== undefined ? `${Number(p.tmax_c).toFixed(1)}°C` : "N/A";
+                  const cat = p.intensity_category ?? "N/A";
+                  label = `<b>${name}</b><br/>Tmax: ${tmax}<br/>Intensity: <b>${cat}</b>`;
+                } else if (viewMode === "forecast") {
+                  const name = p.upazila_name ?? p.district_name ?? "Unknown";
+                  const band = p.risk_band ?? "N/A";
+                  const prob = p.risk_probability !== undefined ? `${(Number(p.risk_probability) * 100).toFixed(0)}%` : "N/A";
+                  label = `<b>${name}</b><br/>Risk band: <b>${band}</b><br/>Probability: ${prob}`;
+                } else {
+                  const name = p.district_name ?? "Unknown";
+                  if (exposureMetric === "population") {
+                    const val = p.mean_pop_density !== undefined ? `${Number(p.mean_pop_density).toFixed(0)} /km²` : "N/A";
+                    label = `<b>${name}</b><br/>Pop density: ${val}`;
+                  } else {
+                    const val = p.movement_intensity_proxy !== undefined ? Number(p.movement_intensity_proxy).toFixed(3) : "N/A";
+                    label = `<b>${name}</b><br/>Movement proxy: ${val}`;
+                  }
+                }
+                leafletLayer.bindTooltip(label, { sticky: true });
+              }}
               style={(feature) => {
                 if (viewMode === "exposure") {
                   const p = feature?.properties ?? {};
@@ -373,6 +405,43 @@ export default function BoundaryMap() {
           )}
         </MapContainer>
       </div>
+      {/* Legend */}
+      <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginTop: "0.6rem", alignItems: "center", fontSize: "0.82rem", color: "#374151" }}>
+        <span style={{ fontWeight: 600 }}>Legend:</span>
+        {viewMode === "historical" &&
+          (["none", "watch", "high", "extreme"] as Intensity[]).map((cat) => (
+            <span key={cat} style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+              <span style={{ width: 14, height: 14, background: fillByCategory[cat], border: "1px solid #9ca3af", borderRadius: 2, display: "inline-block" }} />
+              {cat}
+            </span>
+          ))}
+        {viewMode === "forecast" &&
+          (["low", "watch", "high", "extreme"] as ForecastBand[]).map((b) => {
+            const color = b === "low" ? "#94a3b8" : b === "watch" ? "#fde68a" : b === "high" ? "#fb923c" : "#dc2626";
+            return (
+              <span key={b} style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                <span style={{ width: 14, height: 14, background: color, border: "1px solid #9ca3af", borderRadius: 2, display: "inline-block" }} />
+                {b}
+              </span>
+            );
+          })}
+        {viewMode === "exposure" && exposureMetric === "population" &&
+          ([["<700", "#fef3c7"], ["700–1.5k", "#f59e0b"], ["1.5k–3k", "#ea580c"], ["3k–5k", "#b45309"], [">5k /km²", "#7f1d1d"]] as [string, string][]).map(([l, c]) => (
+            <span key={l} style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+              <span style={{ width: 14, height: 14, background: c, border: "1px solid #9ca3af", borderRadius: 2, display: "inline-block" }} />
+              {l}
+            </span>
+          ))}
+        {viewMode === "exposure" && exposureMetric === "mobility" &&
+          ([["<0.2", "#dcfce7"], ["0.2–0.4", "#4ade80"], ["0.4–0.6", "#16a34a"], ["0.6–0.8", "#166534"], [">0.8", "#14532d"]] as [string, string][]).map(([l, c]) => (
+            <span key={l} style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+              <span style={{ width: 14, height: 14, background: c, border: "1px solid #9ca3af", borderRadius: 2, display: "inline-block" }} />
+              {l}
+            </span>
+          ))}
+        <span style={{ marginLeft: "0.5rem", color: "#6b7280" }}>· Hover districts for details</span>
+      </div>
+
       {viewMode === "forecast" && (
         <div style={{ marginTop: "0.75rem", fontSize: "0.9rem" }}>
           <strong>Top upazila hotspots:</strong>{" "}

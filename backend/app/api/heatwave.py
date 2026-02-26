@@ -77,7 +77,7 @@ def heatwave_summary() -> dict[str, Any]:
 
 
 @router.get("/dates")
-def heatwave_dates(level: str = Query(default="daily", pattern="^(daily|weekly)$")) -> dict[str, list[str]]:
+def heatwave_dates(level: str = Query(default="daily", pattern="^(daily|weekly)$")) -> dict[str, Any]:
     district = _district_index()
     if level == "daily":
         values = sorted(district["date"].dt.date.astype(str).unique().tolist())
