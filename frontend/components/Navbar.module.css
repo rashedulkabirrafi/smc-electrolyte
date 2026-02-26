@@ -1,0 +1,41 @@
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.85rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.brand {
+  font-weight: 700;
+  text-decoration: none;
+  color: #0f172a;
+}
+
+.links {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.link {
+  text-decoration: none;
+  color: #334155;
+  font-weight: 600;
+  padding: 0.4rem 0.7rem;
+  border-radius: 0.45rem;
+}
+
+.link:hover {
+  background: #eef2ff;
+  color: #1d4ed8;
+}

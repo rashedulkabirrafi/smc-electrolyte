@@ -1,9 +1,14 @@
-import IncidentsClient from "./incidents-client";
+import IncidentTable from "./IncidentTable";
+import styles from "./incidents.module.css";
 
 export default function IncidentsPage() {
   return (
-    <main>
-      <IncidentsClient />
+    <main className={styles.page}>
+      <h1 className={styles.title}>Heatstroke Incidents (News Reports)</h1>
+      <p className={styles.subtitle}>
+        Filterable and sortable incident list sourced from CSV in <code>/public/data</code>.
+      </p>
+      <IncidentTable />
     </main>
   );
 }

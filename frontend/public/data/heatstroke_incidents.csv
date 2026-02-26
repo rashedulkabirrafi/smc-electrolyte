@@ -1,0 +1,6 @@
+id,reporting_date,incident_date,district,casualties,place,description,source_name,source_url
+1,2025-04-21,2025-04-20,Pabna,"1","Shalgaria, Pabna","One rickshaw puller reportedly died after heat exposure during severe heatwave conditions.",bdnews24,https://bdnews24.com/bangladesh/827o4pspaj
+2,2025-04-22,2025-04-22,Dhaka,"1","Wari, Dhaka","A day laborer collapsed and later died, with local reports citing heatstroke.",Dhaka Tribune,https://www.dhakatribune.com/bangladesh/dhaka/344672
+3,2025-04-24,2025-04-23,Khulna,"3","Dumuria, Khulna","One death and two heat-related hospital admissions were reported by local correspondents.",New Age,https://www.newagebd.net/article/204191
+4,2025-04-28,2025-04-28,Chattogram,"2","Boalkhali, Chattogram","Two heat-related casualties were reported from separate incidents in the district.",Prothom Alo,https://en.prothomalo.com/bangladesh/b37g9l5a3o
+5,2025-05-02,2025-05-01,Sirajganj,"4","Ullapara, Sirajganj","Multiple farmers fell ill during field work; one death and three injuries were reported.",Dhaka Tribune,https://www.dhakatribune.com/bangladesh/nation/346648

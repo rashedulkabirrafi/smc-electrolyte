@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import ScrollEffects from "../components/scroll-effects";
+import "leaflet/dist/leaflet.css";
+import Navbar from "../components/Navbar";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SMC Heatwave Risk Dashboard",
-  description: "Bangladesh heatwave monitoring and health-risk intelligence platform",
+  title: "Bangladesh Heatwave / Heatstroke Monitor",
+  description: "Simple 2-page monitor for district boundaries and heatstroke incidents",
 };
 
 export default function RootLayout({
@@ -16,18 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ScrollEffects />
-        <header className="top-nav">
-          <div className="top-nav-inner">
-            <Link href="/" className="brand-link">
-              SMC Heatwave
-            </Link>
-            <nav className="menu-links">
-              <Link href="/">Dashboard</Link>
-              <Link href="/incidents">Incidents</Link>
-            </nav>
-          </div>
-        </header>
+        <Navbar />
         {children}
       </body>
     </html>
