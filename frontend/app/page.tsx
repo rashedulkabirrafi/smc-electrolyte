@@ -47,57 +47,89 @@ export default async function Home() {
 
   return (
     <main>
-      <h1 style={{ marginBottom: "0.25rem" }}>Bangladesh Heatwave Risk Dashboard</h1>
-      <p style={{ color: "#4b5563", marginBottom: "1rem" }}>
-        Live district heatwave intensity · 7-day forecast · Population &amp; mobility exposure · SMC activation priority
-      </p>
+      <div style={{ marginBottom: "1.5rem" }}>
+        <h1>Bangladesh Heatwave Risk Dashboard</h1>
+        <p style={{ color: "#64748b", margin: 0, fontSize: "0.95rem" }}>
+          Real-time district heatwave intensity · 7-day forecast · Population exposure · SMC activation priority
+        </p>
+      </div>
 
       {/* Summary stats bar */}
       {hotspots.length > 0 && (
-        <section className="card" style={{ marginBottom: "1rem", background: "#fff8f1", borderColor: "#fde68a" }}>
-          <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", alignItems: "flex-start" }}>
+        <section style={{
+          background: "linear-gradient(135deg, #fff9f5 0%, #fff7ed 50%, #fffbf5 100%)",
+          border: "1px solid #fed7aa",
+          borderRadius: "0.75rem",
+          padding: "1.25rem 1.5rem",
+          marginBottom: "1.25rem",
+        }}>
+          <div style={{ display: "flex", gap: "2.5rem", flexWrap: "wrap", alignItems: "flex-start" }}>
             <div>
-              <div style={{ fontSize: "0.78rem", color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.04em" }}>As of date</div>
-              <div style={{ fontWeight: 700, fontSize: "1.1rem" }}>{summary.as_of_date ?? "N/A"}</div>
+              <div style={{ fontSize: "0.7rem", fontWeight: 600, color: "#92400e", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: "0.3rem" }}>
+                📅 As of date
+              </div>
+              <div style={{ fontWeight: 700, fontSize: "1.35rem", color: "#0f172a" }}>{summary.as_of_date ?? "N/A"}</div>
             </div>
             {extremeCount > 0 && (
               <div>
-                <div style={{ fontSize: "0.78rem", color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.04em" }}>Extreme districts</div>
-                <div style={{ fontWeight: 700, fontSize: "1.1rem", color: "#dc2626" }}>{extremeCount}</div>
+                <div style={{ fontSize: "0.7rem", fontWeight: 600, color: "#92400e", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: "0.3rem" }}>
+                  🔴 Extreme
+                </div>
+                <div style={{ fontWeight: 700, fontSize: "1.35rem", color: "#dc2626" }}>{extremeCount} districts</div>
               </div>
             )}
             {highCount > 0 && (
               <div>
-                <div style={{ fontSize: "0.78rem", color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.04em" }}>High-heat districts</div>
-                <div style={{ fontWeight: 700, fontSize: "1.1rem", color: "#fb923c" }}>{highCount}</div>
+                <div style={{ fontSize: "0.7rem", fontWeight: 600, color: "#92400e", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: "0.3rem" }}>
+                  🟠 High Heat
+                </div>
+                <div style={{ fontWeight: 700, fontSize: "1.35rem", color: "#ea580c" }}>{highCount} districts</div>
               </div>
             )}
-            <div style={{ flex: 1, minWidth: "240px" }}>
-              <div style={{ fontSize: "0.78rem", color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: "0.35rem" }}>Top hotspot districts</div>
+            <div style={{ flex: 1, minWidth: "280px" }}>
+              <div style={{ fontSize: "0.7rem", fontWeight: 600, color: "#92400e", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: "0.5rem" }}>
+                🌡️ Top Hotspot Districts
+              </div>
               <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
                 {hotspots.slice(0, 6).map((h) => (
                   <span key={h.district_code} style={{
                     background: intensityColor[h.intensity_category] ?? "#9ca3af",
                     color: "#fff",
                     borderRadius: "999px",
-                    padding: "0.15rem 0.6rem",
-                    fontSize: "0.82rem",
-                    fontWeight: 500,
+                    padding: "0.3rem 0.75rem",
+                    fontSize: "0.8rem",
+                    fontWeight: 600,
+                    boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
                   }}>
-                    {h.district_name} {h.tmax_c.toFixed(1)}°C
+                    {h.district_name} · {h.tmax_c.toFixed(1)}°C
                   </span>
                 ))}
               </div>
             </div>
-            <div style={{ fontSize: "0.78rem", color: health === "ok" ? "#16a34a" : "#dc2626", alignSelf: "center" }}>
-              ● Backend: {health}
+            <div style={{
+              fontSize: "0.8rem",
+              fontWeight: 500,
+              color: health === "ok" ? "#059669" : "#dc2626",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.4rem",
+              padding: "0.4rem 0.8rem",
+              background: health === "ok" ? "#d1fae5" : "#fee2e2",
+              borderRadius: "999px",
+            }}>
+              <span style={{ fontSize: "0.6rem" }}>●</span> API: {health}
             </div>
           </div>
         </section>
       )}
 
-      <section className="card" style={{ padding: "1rem" }}>
-        <MapWrapper />
+      <section className="card" style={{ padding: "0", overflow: "hidden" }}>
+        <div style={{ padding: "1rem 1.25rem", borderBottom: "1px solid #e2e8f0", background: "linear-gradient(180deg, #f8fafc 0%, #fff 100%)" }}>
+          <h2 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 600 }}>🗺️ Heatwave Intensity Map</h2>
+        </div>
+        <div style={{ padding: "1rem" }}>
+          <MapWrapper />
+        </div>
       </section>
 
       <AnalysisDashboard />
