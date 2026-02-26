@@ -1,7 +1,6 @@
 import AnalysisDashboard from "../components/analysis-dashboard";
+import { serverApiUrl } from "../lib/api";
 import MapWrapper from "../components/map-wrapper";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 
 type Hotspot = {
   district_code: string;
@@ -27,8 +26,8 @@ export default async function Home() {
   let summary: HeatwaveSummary = {};
   try {
     const [healthRes, summaryRes] = await Promise.all([
-      fetch(`${API_BASE}/health`, { cache: "no-store" }),
-      fetch(`${API_BASE}/api/v1/heatwave/summary`, { cache: "no-store" }),
+      fetch(serverApiUrl("/health"), { cache: "no-store" }),
+      fetch(serverApiUrl("/api/v1/heatwave/summary"), { cache: "no-store" }),
     ]);
     if (healthRes.ok) {
       const payload = (await healthRes.json()) as { status?: string };

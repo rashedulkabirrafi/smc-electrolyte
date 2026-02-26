@@ -3,6 +3,7 @@
 import "leaflet/dist/leaflet.css";
 import { GeoJSON, MapContainer, TileLayer } from "react-leaflet";
 import { useEffect, useMemo, useState } from "react";
+import { apiUrl } from "../lib/api";
 
 type GeoJsonFeatureCollection = {
   type: "FeatureCollection";
@@ -25,7 +26,6 @@ const riskColors: Record<RiskCategory, string> = {
   minimal: "#86efac",
 };
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 const BD_BOUNDS: [[number, number], [number, number]] = [[20.2, 87.5], [26.9, 93.2]];
 
 const fillByCategory: Record<Intensity, string> = {
@@ -77,7 +77,7 @@ export default function BoundaryMap() {
 
   useEffect(() => {
     const loadStatic = async () => {
-      const districtRes = await fetch(`${API_BASE}/api/v1/admin/districts`);
+      const districtRes = await fetch(apiUrl("/api/v1/admin/districts"));
       if (districtRes.ok) {
         setDistricts((await districtRes.json()) as GeoJsonFeatureCollection);
       }
@@ -87,7 +87,7 @@ export default function BoundaryMap() {
 
   useEffect(() => {
     const loadDates = async () => {
-      const res = await fetch(`${API_BASE}/api/v1/heatwave/dates?level=${level}`);
+      const res = await fetch(apiUrl(`/api/v1/heatwave/dates?level=${level}`));
       if (!res.ok) {
         setDates([]);
         return;
@@ -105,9 +105,9 @@ export default function BoundaryMap() {
   useEffect(() => {
     const loadForecast = async () => {
       const [datesRes, layerRes, topRes] = await Promise.all([
-        fetch(`${API_BASE}/api/v1/forecast/dates`),
-        fetch(`${API_BASE}/api/v1/forecast/next7`),
-        fetch(`${API_BASE}/api/v1/forecast/top-upazilas?limit=20`),
+        fetch(apiUrl("/api/v1/forecast/dates")),
+        fetch(apiUrl("/api/v1/forecast/next7")),
+        fetch(apiUrl("/api/v1/forecast/top-upazilas?limit=20")),
       ]);
       if (datesRes.ok) {
         const payload = (await datesRes.json()) as { dates: string[] };
@@ -127,9 +127,9 @@ export default function BoundaryMap() {
   useEffect(() => {
     const loadExposure = async () => {
       const [popRes, mobRes, rankRes] = await Promise.all([
-        fetch(`${API_BASE}/api/v1/exposure/population-districts`),
-        fetch(`${API_BASE}/api/v1/exposure/mobility-districts`),
-        fetch(`${API_BASE}/api/v1/exposure/mobility-ranking?limit=20`),
+        fetch(apiUrl("/api/v1/exposure/population-districts")),
+        fetch(apiUrl("/api/v1/exposure/mobility-districts")),
+        fetch(apiUrl("/api/v1/exposure/mobility-ranking?limit=20")),
       ]);
       if (popRes.ok) {
         setPopulationLayer((await popRes.json()) as GeoJsonFeatureCollection);
@@ -148,10 +148,10 @@ export default function BoundaryMap() {
   useEffect(() => {
     const loadRealtime = async () => {
       const [datesRes, currentRes, forecastRes, summaryRes] = await Promise.all([
-        fetch(`${API_BASE}/api/v1/realtime/dates`),
-        fetch(`${API_BASE}/api/v1/realtime/current`),
-        fetch(`${API_BASE}/api/v1/realtime/forecast`),
-        fetch(`${API_BASE}/api/v1/realtime/electrolyte-risk`),
+        fetch(apiUrl("/api/v1/realtime/dates")),
+        fetch(apiUrl("/api/v1/realtime/current")),
+        fetch(apiUrl("/api/v1/realtime/forecast")),
+        fetch(apiUrl("/api/v1/realtime/electrolyte-risk")),
       ]);
       if (datesRes.ok) {
         const data = await datesRes.json();
@@ -177,7 +177,7 @@ export default function BoundaryMap() {
   useEffect(() => {
     if (viewMode !== "realtime" || realtimeMode !== "current" || !realtimeDate) return;
     const loadRealtimeDate = async () => {
-      const res = await fetch(`${API_BASE}/api/v1/realtime/choropleth?date=${realtimeDate}`);
+      const res = await fetch(apiUrl(`/api/v1/realtime/choropleth?date=${realtimeDate}`));
       if (res.ok) {
         setRealtimeLayer((await res.json()) as GeoJsonFeatureCollection);
       }
@@ -191,9 +191,7 @@ export default function BoundaryMap() {
       return;
     }
     const loadLayer = async () => {
-      const res = await fetch(
-        `${API_BASE}/api/v1/heatwave/choropleth?level=${level}&date=${selectedDate}`,
-      );
+      const res = await fetch(apiUrl(`/api/v1/heatwave/choropleth?level=${level}&date=${selectedDate}`));
       if (!res.ok) {
         setLayer(null);
         return;

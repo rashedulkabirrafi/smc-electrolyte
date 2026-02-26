@@ -1,6 +1,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
+import { serverApiUrl } from "../../../lib/api";
 
 type Incident = {
   id: string;
@@ -19,15 +20,13 @@ type Incident = {
   lon: number | null;
 };
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
-
 const IncidentDetailMap = dynamic(() => import("../../../components/incident-detail-map"), {
   ssr: false,
 });
 
 async function fetchIncident(id: string): Promise<Incident | null> {
   try {
-    const res = await fetch(`${API_BASE}/api/v1/incidents/${id}`, { cache: "no-store" });
+    const res = await fetch(serverApiUrl(`/api/v1/incidents/${id}`), { cache: "no-store" });
     if (!res.ok) return null;
     return (await res.json()) as Incident;
   } catch {

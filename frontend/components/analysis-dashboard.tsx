@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { apiUrl } from "../lib/api";
 
 type LagRow = { lag_days: number; n_obs: number; correlation: number | null };
 type Effect = { coef: number; p_value: number };
@@ -33,8 +34,6 @@ type PriorityRow = {
   explainability_note?: string;
 };
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
-
 function corrWidth(value: number | null): number {
   if (value === null) return 0;
   return Math.min(100, Math.round(Math.abs(value) * 100));
@@ -65,7 +64,7 @@ export default function AnalysisDashboard() {
 
   useEffect(() => {
     const load = async () => {
-      const res = await fetch(`${API_BASE}/api/v1/analysis/metrics`);
+      const res = await fetch(apiUrl("/api/v1/analysis/metrics"));
       if (!res.ok) return;
       setMetrics((await res.json()) as Metrics);
     };
@@ -74,7 +73,7 @@ export default function AnalysisDashboard() {
 
   useEffect(() => {
     const loadPriority = async () => {
-      const res = await fetch(`${API_BASE}/api/v1/smc/priority-index?limit=10&area_type=${priorityType}`);
+      const res = await fetch(apiUrl(`/api/v1/smc/priority-index?limit=10&area_type=${priorityType}`));
       if (!res.ok) return;
       setPriorities((await res.json()) as PriorityRow[]);
     };

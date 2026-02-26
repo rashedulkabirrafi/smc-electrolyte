@@ -3,6 +3,7 @@
 import "leaflet/dist/leaflet.css";
 import { GeoJSON, MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { useEffect, useState } from "react";
+import { apiUrl } from "../lib/api";
 
 type GeoJsonFeature = {
   type: "Feature";
@@ -17,8 +18,6 @@ type Props = {
   title: string;
 };
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
-
 export default function IncidentDetailMap({ lat, lon, districtCode, title }: Props) {
   const [districtFeature, setDistrictFeature] = useState<GeoJsonFeature | null>(null);
 
@@ -32,7 +31,7 @@ export default function IncidentDetailMap({ lat, lon, districtCode, title }: Pro
       return;
     }
     const loadDistrict = async () => {
-      const res = await fetch(`${API_BASE}/api/v1/admin/districts/${districtCode}`);
+      const res = await fetch(apiUrl(`/api/v1/admin/districts/${districtCode}`));
       if (!res.ok) return;
       setDistrictFeature((await res.json()) as GeoJsonFeature);
     };

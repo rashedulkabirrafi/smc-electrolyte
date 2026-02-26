@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import "leaflet/dist/leaflet.css";
+import { apiUrl } from "../../lib/api";
 
 // Dynamic import for map components to avoid SSR issues
 const MapContainer = dynamic(
@@ -95,8 +96,6 @@ type IncidentResponse = {
   page_size: number;
 };
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
-
 // Division to districts mapping
 const DIVISIONS: Record<string, string[]> = {
   "Barishal": ["Barguna", "Barishal", "Bhola", "Jhalokati", "Patuakhali", "Pirojpur"],
@@ -154,8 +153,8 @@ export default function IncidentsClient() {
   useEffect(() => {
     const loadReferenceData = async () => {
       const [districtRes, dateRes] = await Promise.all([
-        fetch(`${API_BASE}/api/v1/incidents/districts`, { cache: "no-store" }),
-        fetch(`${API_BASE}/api/v1/incidents/dates`, { cache: "no-store" }),
+        fetch(apiUrl("/api/v1/incidents/districts"), { cache: "no-store" }),
+        fetch(apiUrl("/api/v1/incidents/dates"), { cache: "no-store" }),
       ]);
       if (districtRes.ok) {
         const payload = (await districtRes.json()) as { districts?: string[] };
@@ -170,7 +169,7 @@ export default function IncidentsClient() {
 
     // Load BD boundary for map
     const loadBoundary = async () => {
-      const res = await fetch(`${API_BASE}/api/v1/admin/districts`);
+      const res = await fetch(apiUrl("/api/v1/admin/districts"));
       if (res.ok) {
         setBdBoundary((await res.json()) as GeoJsonFeatureCollection);
       }
@@ -181,7 +180,7 @@ export default function IncidentsClient() {
   useEffect(() => {
     const load = async () => {
       setLoading(true);
-      const res = await fetch(`${API_BASE}/api/v1/incidents?${query}`, { cache: "no-store" });
+      const res = await fetch(apiUrl(`/api/v1/incidents?${query}`), { cache: "no-store" });
       if (!res.ok) {
         setItems([]);
         setTotal(0);
@@ -230,7 +229,7 @@ export default function IncidentsClient() {
     params.set("type", type);
     if (q) params.set("q", q);
     params.set("sort", sort);
-    window.open(`${API_BASE}/api/v1/incidents/export?${params.toString()}`, "_blank", "noopener,noreferrer");
+    window.open(apiUrl(`/api/v1/incidents/export?${params.toString()}`), "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -498,7 +497,7 @@ export default function IncidentsClient() {
             />
           )}
           {items.map((item) => {
-            if (!item.lat || !item.lon) return null;
+            if (item.lat === null || item.lon === null) return null;
             const hasDeaths = (item.deaths ?? 0) > 0;
             return (
               <CircleMarker
