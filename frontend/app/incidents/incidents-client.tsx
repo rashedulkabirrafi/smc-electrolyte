@@ -39,9 +39,11 @@ export default function IncidentsClient() {
   const [q, setQ] = useState("");
   const [sort, setSort] = useState<"date_desc" | "date_asc">("date_desc");
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize, setPageSize] = useState(100); // Show all by default
+  const [showAll, setShowAll] = useState(true);
 
-  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const effectivePageSize = showAll ? 1000 : pageSize;
+  const totalPages = Math.max(1, Math.ceil(total / effectivePageSize));
 
   const query = useMemo(() => {
     const params = new URLSearchParams();
@@ -51,10 +53,10 @@ export default function IncidentsClient() {
     params.set("type", type);
     if (q) params.set("q", q);
     params.set("sort", sort);
-    params.set("page", String(page));
-    params.set("page_size", String(pageSize));
+    params.set("page", String(showAll ? 1 : page));
+    params.set("page_size", String(effectivePageSize));
     return params.toString();
-  }, [startDate, endDate, district, type, q, sort, page, pageSize]);
+  }, [startDate, endDate, district, type, q, sort, page, effectivePageSize, showAll]);
 
   useEffect(() => {
     const loadDistricts = async () => {
@@ -202,7 +204,7 @@ export default function IncidentsClient() {
           </thead>
           <tbody>
             {items.map((item, idx) => {
-              const serial = (page - 1) * pageSize + idx + 1;
+              const serial = showAll ? idx + 1 : (page - 1) * pageSize + idx + 1;
               const eventDate = item.date_occurred || item.date_published || "N/A";
               const place = item.upazila ? `${item.district}, ${item.upazila}` : item.district || item.place || "N/A";
               return (
@@ -261,7 +263,7 @@ export default function IncidentsClient() {
 
       <div className="mobile-only incidents-cards">
         {items.map((item, idx) => {
-          const serial = (page - 1) * pageSize + idx + 1;
+          const serial = showAll ? idx + 1 : (page - 1) * pageSize + idx + 1;
           const eventDate = item.date_occurred || item.date_published || "N/A";
           const place = item.upazila ? `${item.district}, ${item.upazila}` : item.district || item.place || "N/A";
           return (
@@ -292,38 +294,53 @@ export default function IncidentsClient() {
 
       <div className="pager-row">
         <div>
-          Total incidents: <strong>{total}</strong>
+          Showing <strong>{items.length}</strong> of <strong>{total}</strong> incidents
           {loading ? <span style={{ marginLeft: "0.5rem", color: "#64748b" }}>Loading...</span> : null}
         </div>
         <div className="pager-controls">
-          <label>
-            Per page
-            <select
-              value={pageSize}
+          <label className="show-all-toggle">
+            <input
+              type="checkbox"
+              checked={showAll}
               onChange={(e) => {
+                setShowAll(e.target.checked);
                 setPage(1);
-                setPageSize(Number(e.target.value));
               }}
-            >
-              <option value={10}>10</option>
-              <option value={20}>20</option>
-              <option value={50}>50</option>
-            </select>
+            />
+            Show all
           </label>
-          <button className="btn" type="button" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1}>
-            Prev
-          </button>
-          <span>
-            Page {page} / {totalPages}
-          </span>
-          <button
-            className="btn"
-            type="button"
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            disabled={page >= totalPages}
-          >
-            Next
-          </button>
+          {!showAll && (
+            <>
+              <label>
+                Per page
+                <select
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPage(1);
+                    setPageSize(Number(e.target.value));
+                  }}
+                >
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                  <option value={50}>50</option>
+                </select>
+              </label>
+              <button className="btn" type="button" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1}>
+                Prev
+              </button>
+              <span>
+                Page {page} / {totalPages}
+              </span>
+              <button
+                className="btn"
+                type="button"
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page >= totalPages}
+              >
+                Next
+              </button>
+            </>
+          )}
         </div>
       </div>
     </section>

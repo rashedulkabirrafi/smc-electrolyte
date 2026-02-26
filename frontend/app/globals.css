@@ -233,6 +233,24 @@ iframe {
   padding: 0.35rem 0.45rem;
 }
 
+.show-all-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: #475569;
+  cursor: pointer;
+  padding: 0.35rem 0.6rem;
+  background: #f1f5f9;
+  border-radius: 0.45rem;
+  border: 1px solid #e2e8f0;
+}
+
+.show-all-toggle input {
+  accent-color: #0ea5e9;
+  cursor: pointer;
+}
+
 .mobile-only {
   display: none;
 }
