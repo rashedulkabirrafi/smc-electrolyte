@@ -37,6 +37,30 @@ API endpoints:
 - `GET /api/v1/admin/districts/{district_code}`
 - `GET /api/v1/admin/upazilas/{upazila_code}`
 
+## Incidents Page + API
+Frontend routes:
+- `GET /incidents` — filterable table with pagination and CSV export
+- `GET /incidents/{id}` — detail view with map
+
+Backend incidents endpoints:
+- `GET /api/v1/incidents` — paginated list with filters
+- `GET /api/v1/incidents/{id}` — single incident detail
+- `GET /api/v1/incidents/districts` — list of districts for dropdown
+- `GET /api/v1/incidents/export` — CSV download of filtered results
+
+Incident data source resolution order:
+1. `data_processed/heatstroke_incidents.geojson` (preferred; includes geocoded points/admin codes)
+2. `data_processed/heatstroke_incidents.csv`
+3. `data_processed/heatstroke_incidents.parquet`
+
+`/api/v1/incidents` supports:
+- `start_date`, `end_date` (YYYY-MM-DD)
+- `district`
+- `type=death|injury|all`
+- `q` (search over place + headline)
+- `sort=date_desc|date_asc`
+- `page`, `page_size`
+
 ## Historical Heatwave Pipeline (Phase 3)
 Generate demo temperature and derived heatwave layers:
 ```bash

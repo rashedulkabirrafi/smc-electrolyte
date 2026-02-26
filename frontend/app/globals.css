@@ -17,6 +17,45 @@ body {
   font-family: "Segoe UI", sans-serif;
 }
 
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid #e2e8f0;
+  backdrop-filter: blur(6px);
+}
+
+.top-nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0.8rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand-link {
+  text-decoration: none;
+  color: #1e293b;
+  font-weight: 700;
+}
+
+.menu-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.menu-links a {
+  text-decoration: none;
+  color: #334155;
+  font-weight: 500;
+}
+
+.menu-links a:hover {
+  color: var(--accent);
+}
+
 main {
   max-width: 1100px;
   margin: 0 auto;
@@ -59,4 +98,211 @@ iframe {
   width: 100%;
   height: 480px;
   border: 0;
+}
+
+.btn {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #1f2937;
+  border-radius: 0.5rem;
+  padding: 0.45rem 0.75rem;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.btn-accent {
+  background: #d8511d;
+  border-color: #d8511d;
+  color: #fff;
+}
+
+.incidents-shell {
+  padding: 1rem;
+}
+
+.incidents-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.filters-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+  margin-bottom: 1rem;
+}
+
+.filters-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.86rem;
+  color: #475569;
+}
+
+.filters-grid input,
+.filters-grid select {
+  border: 1px solid #cbd5e1;
+  border-radius: 0.45rem;
+  padding: 0.45rem 0.55rem;
+  background: #fff;
+  font-size: 0.9rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.65rem;
+}
+
+.incidents-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.incidents-table th {
+  background: #f8fafc;
+  font-weight: 600;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 0.5rem 0.55rem;
+  text-align: left;
+}
+
+.incidents-table td {
+  border-bottom: 1px solid #f1f5f9;
+  padding: 0.45rem 0.55rem;
+  vertical-align: top;
+}
+
+.incidents-table td a {
+  color: #0f766e;
+  text-decoration: none;
+}
+
+.incidents-table td a:hover {
+  text-decoration: underline;
+}
+
+.clickable-row {
+  cursor: pointer;
+}
+
+.clickable-row:hover {
+  background: #f8fafc;
+}
+
+.pager-row {
+  margin-top: 0.9rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.pager-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pager-controls label {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.pager-controls select {
+  border: 1px solid #cbd5e1;
+  border-radius: 0.45rem;
+  padding: 0.35rem 0.45rem;
+}
+
+.mobile-only {
+  display: none;
+}
+
+.incidents-cards {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.incident-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.65rem;
+  padding: 0.75rem;
+  background: #fff;
+}
+
+.incident-card h3 {
+  margin: 0.25rem 0 0.4rem;
+  font-size: 1rem;
+}
+
+.incident-card p {
+  margin: 0.25rem 0;
+  font-size: 0.89rem;
+  color: #334155;
+}
+
+.incident-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.incident-card-top a {
+  color: #0f766e;
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.7rem;
+  margin-top: 0.7rem;
+}
+
+.detail-grid p {
+  margin: 0.35rem 0;
+  font-size: 0.92rem;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.muted-label {
+  color: #64748b;
+  font-size: 0.85rem;
+  margin: 0 0 0.2rem;
+}
+
+@media (max-width: 900px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: block;
+  }
 }
