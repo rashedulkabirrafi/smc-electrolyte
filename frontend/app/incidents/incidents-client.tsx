@@ -39,10 +39,10 @@ export default function IncidentsClient() {
   const [q, setQ] = useState("");
   const [sort, setSort] = useState<"date_desc" | "date_asc">("date_desc");
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(100); // Show all by default
+  const [pageSize, setPageSize] = useState(50);
   const [showAll, setShowAll] = useState(true);
 
-  const effectivePageSize = showAll ? 1000 : pageSize;
+  const effectivePageSize = showAll ? 5000 : pageSize;
   const totalPages = Math.max(1, Math.ceil(total / effectivePageSize));
 
   const query = useMemo(() => {

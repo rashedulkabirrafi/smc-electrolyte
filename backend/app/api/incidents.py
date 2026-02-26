@@ -272,7 +272,7 @@ def list_incidents(
     q: str | None = Query(default=None),
     sort: Literal["date_desc", "date_asc"] = Query(default="date_desc"),
     page: int = Query(default=1, ge=1),
-    page_size: int = Query(default=20, ge=1, le=200),
+    page_size: int = Query(default=20, ge=1, le=5000),
 ) -> dict[str, Any]:
     start_dt = _parse_iso_date(start_date, "start_date")
     end_dt = _parse_iso_date(end_date, "end_date")
