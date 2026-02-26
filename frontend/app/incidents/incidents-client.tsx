@@ -1,7 +1,34 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import "leaflet/dist/leaflet.css";
+
+// Dynamic import for map components to avoid SSR issues
+const MapContainer = dynamic(
+  () => import("react-leaflet").then((m) => m.MapContainer),
+  { ssr: false }
+);
+const TileLayer = dynamic(
+  () => import("react-leaflet").then((m) => m.TileLayer),
+  { ssr: false }
+);
+const GeoJSON = dynamic(
+  () => import("react-leaflet").then((m) => m.GeoJSON),
+  { ssr: false }
+);
+const CircleMarker = dynamic(
+  () => import("react-leaflet").then((m) => m.CircleMarker),
+  { ssr: false }
+);
+const Tooltip = dynamic(
+  () => import("react-leaflet").then((m) => m.Tooltip),
+  { ssr: false }
+);
+
+const BD_CENTER: [number, number] = [23.8, 90.4];
+const BD_BOUNDS: [[number, number], [number, number]] = [[20.2, 87.5], [26.9, 93.2]];
 
 type Incident = {
   id: string;
@@ -16,6 +43,13 @@ type Incident = {
   headline: string | null;
   place: string | null;
   district_code: string | null;
+  lat: number | null;
+  lon: number | null;
+};
+
+type GeoJsonFeatureCollection = {
+  type: "FeatureCollection";
+  features: any[];
 };
 
 // District code to name mapping
@@ -66,6 +100,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000"
 export default function IncidentsClient() {
   const [items, setItems] = useState<Incident[]>([]);
   const [districts, setDistricts] = useState<string[]>([]);
+  const [bdBoundary, setBdBoundary] = useState<GeoJsonFeatureCollection | null>(null);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
 
@@ -103,6 +138,15 @@ export default function IncidentsClient() {
       setDistricts(payload.districts ?? []);
     };
     loadDistricts().catch(() => null);
+
+    // Load BD boundary for map
+    const loadBoundary = async () => {
+      const res = await fetch(`${API_BASE}/api/v1/admin/districts`);
+      if (res.ok) {
+        setBdBoundary((await res.json()) as GeoJsonFeatureCollection);
+      }
+    };
+    loadBoundary().catch(() => null);
   }, []);
 
   useEffect(() => {
@@ -223,6 +267,63 @@ export default function IncidentsClient() {
             }}
           />
         </label>
+      </div>
+
+      {/* Map showing incidents */}
+      <div style={{ height: "400px", width: "100%", marginBottom: "1.5rem", borderRadius: "0.5rem", overflow: "hidden", border: "1px solid #e5e7eb" }}>
+        <MapContainer
+          center={BD_CENTER}
+          zoom={6}
+          style={{ height: "100%", width: "100%" }}
+          maxBounds={BD_BOUNDS}
+          minZoom={5}
+          maxZoom={10}
+        >
+          <TileLayer
+            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+            attribution='&copy; <a href="https://carto.com/">CARTO</a>'
+          />
+          {bdBoundary && (
+            <GeoJSON
+              data={bdBoundary as any}
+              style={{ color: "#64748b", weight: 1, fillColor: "#f1f5f9", fillOpacity: 0.3 }}
+            />
+          )}
+          {items.map((item) => {
+            if (!item.lat || !item.lon) return null;
+            const hasDeaths = (item.deaths ?? 0) > 0;
+            return (
+              <CircleMarker
+                key={item.id}
+                center={[item.lat, item.lon]}
+                radius={hasDeaths ? 8 + Math.min((item.deaths ?? 1) * 2, 12) : 6}
+                pathOptions={{
+                  color: hasDeaths ? "#dc2626" : "#f97316",
+                  fillColor: hasDeaths ? "#dc2626" : "#f97316",
+                  fillOpacity: 0.7,
+                  weight: 2,
+                }}
+              >
+                <Tooltip>
+                  <strong>{getDistrictName(item)}</strong><br />
+                  {item.date_occurred || item.date_published}<br />
+                  Deaths: {item.deaths ?? 0} · Injured: {item.injured ?? 0}<br />
+                  <em style={{ fontSize: "0.85em" }}>{item.headline}</em>
+                </Tooltip>
+              </CircleMarker>
+            );
+          })}
+        </MapContainer>
+      </div>
+      <div style={{ marginBottom: "1rem", fontSize: "0.85rem", color: "#64748b" }}>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: "0.3rem", marginRight: "1rem" }}>
+          <span style={{ width: 12, height: 12, borderRadius: "50%", background: "#dc2626", display: "inline-block" }} />
+          Fatal incident
+        </span>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: "0.3rem" }}>
+          <span style={{ width: 12, height: 12, borderRadius: "50%", background: "#f97316", display: "inline-block" }} />
+          Injury only
+        </span>
       </div>
 
       <div className="table-wrap desktop-only">
