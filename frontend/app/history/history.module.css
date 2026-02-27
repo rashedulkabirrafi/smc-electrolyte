@@ -1,0 +1,140 @@
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.title {
+  margin: 0 0 0.35rem;
+  font-size: 1.65rem;
+}
+
+.subtitle {
+  margin: 0 0 1rem;
+  color: #475569;
+  max-width: 78ch;
+}
+
+.panel {
+  background: #ffffff;
+  border: 1px solid #dbe2ea;
+  border-radius: 0.6rem;
+  padding: 0.9rem;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: minmax(0, 280px) auto;
+  gap: 0.75rem;
+  align-items: end;
+  margin-bottom: 0.8rem;
+}
+
+.fieldLabel {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.85rem;
+  color: #334155;
+}
+
+.select {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.45rem;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.9rem;
+  background: #f8fafc;
+  color: #334155;
+}
+
+.buttonRow {
+  display: flex;
+  gap: 0.55rem;
+}
+
+.buttonPrimary,
+.buttonSecondary {
+  border: 1px solid #cbd5e1;
+  border-radius: 0.45rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.buttonPrimary {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  color: #ffffff;
+}
+
+.buttonSecondary {
+  background: #ffffff;
+  color: #0f172a;
+}
+
+.buttonPrimary:disabled,
+.buttonSecondary:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.meta {
+  margin: 0 0 0.7rem;
+  color: #334155;
+  font-size: 0.9rem;
+}
+
+.hint {
+  margin: 0;
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.error {
+  margin: 0 0 0.8rem;
+  color: #b91c1c;
+  font-size: 0.9rem;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 460px;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 0.55rem 0.6rem;
+  border-bottom: 1px solid #e8edf3;
+  font-size: 0.88rem;
+}
+
+.table th {
+  background: #f8fafc;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 0.78rem;
+}
+
+@media (max-width: 700px) {
+  .controls {
+    grid-template-columns: 1fr;
+  }
+
+  .buttonRow {
+    width: 100%;
+  }
+
+  .buttonPrimary,
+  .buttonSecondary {
+    flex: 1;
+  }
+}
