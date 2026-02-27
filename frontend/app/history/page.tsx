@@ -1,5 +1,10 @@
-import HistoryClient from "./HistoryClient";
+import dynamic from "next/dynamic";
 import styles from "./history.module.css";
+
+const HistoryClient = dynamic(() => import("./HistoryClient"), {
+  ssr: false,
+  loading: () => <div className={styles.mapPlaceholder}>Loading history tools...</div>,
+});
 
 export default function HistoryPage() {
   return (
