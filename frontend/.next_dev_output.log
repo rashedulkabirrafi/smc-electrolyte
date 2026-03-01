@@ -38,3 +38,10 @@
  GET /incidents 200 in 37ms
  GET /history 200 in 35ms
  GET /incidents 200 in 60ms
+ GET /incidents 200 in 33ms
+ ✓ Compiled in 2.2s (1591 modules)
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET /incidents 200 in 236ms
+ GET /incidents 200 in 50ms
+ GET /incidents 200 in 53ms

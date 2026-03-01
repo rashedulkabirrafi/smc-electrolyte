@@ -41,8 +41,8 @@
 }
 
 .mapContainer {
-  height: 46vh;
-  min-height: 380px;
+  height: 58vh;
+  min-height: 480px;
   border: 1px solid var(--border-subtle);
   border-radius: 16px;
   overflow: hidden;
@@ -309,6 +309,11 @@
 }
 
 @media (max-width: 640px) {
+  .mapContainer {
+    height: 52vh;
+    min-height: 400px;
+  }
+
   .filters {
     grid-template-columns: 1fr;
   }
