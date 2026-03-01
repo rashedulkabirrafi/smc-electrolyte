@@ -81,23 +81,42 @@ function parseDistricts(geoJsonParams: any): DistrictPoint[] {
   return points.sort((a, b) => a.label.localeCompare(b.label));
 }
 
-// Fetch historical data
-async function fetchOpenMeteoHistory(lat: number, lon: number) {
-  const start = "2010-01-01";
-  const end = new Date().toISOString().slice(0, 10); // Today
+// Fetch historical data from static chunks to bypass live API rate limits
+async function fetchStaticHistory(districtId: string) {
+  const startYear = 2010;
+  const endYear = new Date().getFullYear();
+  const yearlyDataPromises = [];
 
-  const params = new URLSearchParams({
-    latitude: String(lat),
-    longitude: String(lon),
-    start_date: start,
-    end_date: end,
-    daily: "temperature_2m_mean,temperature_2m_max,relative_humidity_2m_mean,dew_point_2m_mean,apparent_temperature_max,wind_speed_10m_max",
-    timezone: "auto",
-  });
+  for (let y = startYear; y <= endYear; y++) {
+    yearlyDataPromises.push(
+      fetch(`/data/history/${y}.json`)
+        .then(res => res.ok ? res.json() : {})
+        .catch(() => ({}))
+    );
+  }
 
-  const res = await fetch(`https://archive-api.open-meteo.com/v1/archive?${params.toString()}`);
-  if (!res.ok) throw new Error(`Open-Meteo API Failed (${res.status})`);
-  return res.json();
+  const yearlyChunks = await Promise.all(yearlyDataPromises);
+  
+  // Reconstruct into the raw format processWeatherData expects
+  const raw: any = { daily: { time: [], temperature_2m_mean: [], temperature_2m_max: [], relative_humidity_2m_mean: [], dew_point_2m_mean: [], apparent_temperature_max: [], wind_speed_10m_max: [] }};
+  
+  for (const chunk of yearlyChunks as any[]) {
+    const dates = Object.keys(chunk).sort();
+    for (const date of dates) {
+      const dData = chunk[date][districtId];
+      if (dData) {
+        raw.daily.time.push(date);
+        raw.daily.temperature_2m_mean.push(dData.t - 2); // Approximate mean from max
+        raw.daily.temperature_2m_max.push(dData.t);
+        raw.daily.relative_humidity_2m_mean.push(dData.h);
+        raw.daily.dew_point_2m_mean.push(dData.t - ((100 - dData.h) / 5)); // Approximate dew point
+        raw.daily.apparent_temperature_max.push(dData.t + 2); // Approximate heat index / feels like
+        raw.daily.wind_speed_10m_max.push(dData.w);
+      }
+    }
+  }
+
+  return raw;
 }
 
 function processWeatherData(raw: any) {
@@ -226,7 +245,7 @@ export default function HistoryClient() {
     
     async function fetchWeather() {
       try {
-        const raw = await fetchOpenMeteoHistory(dist!.lat, dist!.lon);
+        const raw = await fetchStaticHistory(selectedDistrictId);
         if (cancelled) return;
         
         const processed = processWeatherData(raw);
