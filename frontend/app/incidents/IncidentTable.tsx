@@ -246,7 +246,33 @@ export default function IncidentTable({ initialDistrict = "" }: IncidentTablePro
                   <td>{row.reporting_date || "-"}</td>
                   <td>{row.incident_date || "-"}</td>
                   <td>{row.district || "-"}</td>
-                  <td>{row.dead} / {row.sick}</td>
+                  <td>
+                    <span
+                      style={{
+                        display: "inline-block",
+                        padding: "0.2rem 0.5rem",
+                        borderRadius: "999px",
+                        background: row.dead > 0 ? "rgba(239, 68, 68, 0.2)" : "rgba(148, 163, 184, 0.2)",
+                        color: row.dead > 0 ? "#fca5a5" : "inherit",
+                        fontWeight: row.dead > 0 ? 600 : "normal",
+                        marginRight: "0.4rem",
+                      }}
+                    >
+                      D: {row.dead}
+                    </span>
+                    <span
+                      style={{
+                        display: "inline-block",
+                        padding: "0.2rem 0.5rem",
+                        borderRadius: "999px",
+                        background: row.sick > 0 ? "rgba(245, 158, 11, 0.2)" : "rgba(148, 163, 184, 0.2)",
+                        color: row.sick > 0 ? "#fcd34d" : "inherit",
+                        fontWeight: row.sick > 0 ? 600 : "normal",
+                      }}
+                    >
+                      S: {row.sick}
+                    </span>
+                  </td>
                   <td>{row.place || "-"}</td>
                   <td className={styles.description}>{row.description || "-"}</td>
                   <td>

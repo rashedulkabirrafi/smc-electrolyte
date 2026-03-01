@@ -283,10 +283,10 @@ export default function HomeMapClient() {
       const temp = districtTemperatureByKey.get(key);
 
       return {
-        color: "#1e40af",
+        color: "rgba(255, 255, 255, 0.4)",
         weight: 1,
-        fillColor: showTemperature ? getTemperatureColor(temp) : "#93c5fd",
-        fillOpacity: showTemperature ? 0.55 : 0.35,
+        fillColor: showTemperature ? getTemperatureColor(temp) : "#1e3a8a",
+        fillOpacity: showTemperature ? 0.65 : 0.45,
       };
     };
   }, [showTemperature, districtTemperatureByKey]);
@@ -313,8 +313,8 @@ export default function HomeMapClient() {
         const target = event.target as L.Path;
         target.setStyle({
           weight: 2,
-          color: "#0f172a",
-          fillOpacity: showTemperature ? 0.75 : 0.55,
+          color: "#ffffff",
+          fillOpacity: showTemperature ? 0.85 : 0.75,
         });
       },
       mouseout: (event) => {

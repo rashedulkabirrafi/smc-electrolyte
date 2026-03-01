@@ -141,8 +141,8 @@ export default function IncidentMap() {
         const target = event.target as L.Path;
         target.setStyle({
           weight: 2,
-          color: "#0f172a",
-          fillOpacity: 0.45,
+          color: "#ffffff",
+          fillOpacity: 0.65,
         });
       },
       mouseout: (event) => {
@@ -177,10 +177,10 @@ export default function IncidentMap() {
             <GeoJSON
               data={districts as any}
               style={{
-                color: "#334155",
+                color: "rgba(255, 255, 255, 0.3)",
                 weight: 1,
-                fillColor: "#cbd5e1",
-                fillOpacity: 0.2,
+                fillColor: "#1e3a8a",
+                fillOpacity: 0.25,
               }}
               onEachFeature={onEachBoundary}
               ref={(instance) => {
@@ -194,10 +194,10 @@ export default function IncidentMap() {
               center={[point.lat, point.lng]}
               radius={6}
               pathOptions={{
-                color: "#b91c1c",
+                color: "#f87171",
                 fillColor: "#ef4444",
-                fillOpacity: 0.85,
-                weight: 1,
+                fillOpacity: 0.9,
+                weight: 2,
               }}
             >
               <Tooltip>
