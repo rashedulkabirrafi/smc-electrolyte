@@ -1,0 +1,40 @@
+
+> heatwave-monitor-frontend@1.0.0 dev
+> next dev -H 0.0.0.0
+
+  ▲ Next.js 14.2.5
+  - Local:        http://localhost:3000
+  - Network:      http://0.0.0.0:3000
+
+ ✓ Starting...
+ ✓ Ready in 3.7s
+ ○ Compiling / ...
+ ✓ Compiled / in 1843ms (606 modules)
+ GET / 200 in 2486ms
+ ○ Compiling /incidents ...
+ ✓ Compiled /incidents in 1043ms (620 modules)
+ GET /incidents 200 in 1310ms
+ GET /incidents 200 in 116ms
+ GET /incidents 200 in 54ms
+ ○ Compiling /history ...
+ ✓ Compiled /history in 3.2s (1572 modules)
+ GET /history 200 in 3652ms
+ GET /incidents 200 in 67ms
+ ✓ Compiled / in 457ms (795 modules)
+ GET / 200 in 667ms
+ GET /incidents 200 in 71ms
+ GET /history 200 in 34ms
+ GET /incidents 200 in 41ms
+ GET /incidents 200 in 31ms
+ GET /incidents 200 in 35ms
+ GET /incidents 200 in 29ms
+ GET /incidents 200 in 34ms
+ GET / 200 in 27ms
+ GET /incidents 200 in 40ms
+ GET /history 200 in 31ms
+ GET /incidents 200 in 32ms
+ GET /incidents 200 in 32ms
+ GET /incidents 200 in 33ms
+ GET /incidents 200 in 37ms
+ GET /history 200 in 35ms
+ GET /incidents 200 in 60ms
