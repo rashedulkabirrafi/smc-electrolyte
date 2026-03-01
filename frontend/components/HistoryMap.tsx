@@ -1,8 +1,9 @@
 import { useEffect, useRef, useMemo, useState } from "react";
-import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
+import { MapContainer, TileLayer, GeoJSON, CircleMarker, Tooltip as LeafletTooltip } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import type { FeatureCollection, Geometry, Feature } from "geojson";
 import styles from "../app/history/history.module.css";
+import type { IncidentRecord } from "../lib/data";
 
 // Helper color scale: from Blue (cool) -> Yellow (warm) -> Red (hot)
 function getTemperatureColor(temp: number) {
@@ -31,18 +32,49 @@ function getWindColor(wind: number) {
 type MapProps = {
   currentDate: string;   // YYYY-MM-DD
   activeMode: "temperature" | "humidity" | "wind";
+  dataMode?: "daily" | "monthly";
+  incidents?: IncidentRecord[];
 };
 
-export default function HistoryMap({ currentDate, activeMode }: MapProps) {
+export default function HistoryMap({ currentDate, activeMode, dataMode = "monthly", incidents = [] }: MapProps) {
   const [geoData, setGeoData] = useState<FeatureCollection | null>(null);
   const [metricData, setMetricData] = useState<Record<string, any>>({});
+  const [centroids, setCentroids] = useState<Record<string, {lat: number, lon: number}>>({});
   const mapRef = useRef<any>(null);
 
   // Load standard geojson boundaries
   useEffect(() => {
     fetch("/data/bd_districts.geojson")
       .then(res => res.json())
-      .then(data => setGeoData(data))
+      .then(data => {
+        setGeoData(data);
+        
+        // Pre-calculate centroids for incident placing
+        const cmap: Record<string, {lat: number, lon: number}> = {};
+        for (const feature of data.features) {
+          const rawName = feature.properties?.NAME_2 || feature.properties?.district || "";
+          const id = rawName.toLowerCase().replace(/[^a-z0-9]+/g, "").trim();
+          
+          let coords: any[] = [];
+          const collect = (node: any) => {
+             if (Array.isArray(node) && node.length >= 2 && typeof node[0] === "number") {
+                coords.push({lon: node[0], lat: node[1]});
+                return;
+             }
+             if (Array.isArray(node)) {
+                for (const child of node) collect(child);
+             }
+          }
+          if (feature.geometry?.coordinates) collect(feature.geometry.coordinates);
+          
+          if (coords.length > 0) {
+             const lat = coords.reduce((acc, c) => acc + c.lat, 0) / coords.length;
+             const lon = coords.reduce((acc, c) => acc + c.lon, 0) / coords.length;
+             cmap[id] = { lat, lon };
+          }
+        }
+        setCentroids(cmap);
+      })
       .catch(console.error);
   }, []);
 
@@ -67,6 +99,17 @@ export default function HistoryMap({ currentDate, activeMode }: MapProps) {
       })
       .catch(() => setMetricData({})); // fallback to empty if data chunk isn't downlaoded yet
   }, [currentDate]);
+
+  const activeIncidents = useMemo(() => {
+    if (!incidents || incidents.length === 0 || !currentDate) return [];
+    return incidents.filter(inc => {
+      if (dataMode === "daily") {
+         return inc.incident_date === currentDate;
+      } else {
+         return inc.incident_date.startsWith(currentDate.slice(0, 7));
+      }
+    });
+  }, [incidents, currentDate, dataMode]);
 
   const styleFeature = (feature?: Feature<Geometry, any>) => {
     if (!feature) return {};
@@ -97,6 +140,10 @@ export default function HistoryMap({ currentDate, activeMode }: MapProps) {
     if (!feature) return;
     const rawName = feature.properties?.NAME_2 || feature.properties?.district || "";
     const id = rawName.toLowerCase().replace(/[^a-z0-9]+/g, "").trim();
+    
+    // In monthly mode, currentDate is just "YYYY-MM", but static data uses "YYYY-MM-01"
+    const searchDate = dataMode === "monthly" && currentDate.length === 7 ? `${currentDate}-01` : currentDate;
+    
     const metrics = metricData[id];
     
     let popupContent = `<strong>${rawName}</strong><br/>`;
@@ -139,6 +186,26 @@ export default function HistoryMap({ currentDate, activeMode }: MapProps) {
           // The key ensures GeoJSON fully re-renders its styles when metrics shift during playback
           key={`${currentDate}-${activeMode}`} 
         />
+        
+        {/* Render correlated incidents dynamically based on timeline */}
+        {activeIncidents.map(inc => {
+          const id = inc.district.toLowerCase().replace(/[^a-z0-9]+/g, "").trim();
+          const pos = centroids[id] || { lat: 23.685, lon: 90.356 }; // Fallback to bd center
+          return (
+            <CircleMarker 
+              key={inc.id}
+              center={[pos.lat, pos.lon]}
+              radius={8}
+              pathOptions={{ fillColor: '#ef4444', color: '#fff', weight: 2, fillOpacity: 0.9 }}
+            >
+              <LeafletTooltip className="dark-tooltip" direction="top">
+                <strong>{inc.place}</strong><br/>
+                <span style={{color: '#f87171'}}>Dead: {inc.dead}</span> | <span style={{color: '#fbbf24'}}>Sick: {inc.sick}</span><br/>
+                <small style={{color: '#94a3b8'}}>{inc.incident_date}</small>
+              </LeafletTooltip>
+            </CircleMarker>
+          );
+        })}
       </MapContainer>
       
       {/* Visual Legend */}

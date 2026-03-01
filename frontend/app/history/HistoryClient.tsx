@@ -14,6 +14,7 @@ import {
 } from "recharts";
 import dynamic from "next/dynamic";
 import styles from "./history.module.css";
+import { loadIncidentsCsv, type IncidentRecord } from "../../lib/data";
 
 const HistoryMap = dynamic(() => import("../../components/HistoryMap"), {
   ssr: false,
@@ -189,6 +190,7 @@ function IndicatorRow({ label, value, unit, limit, condition, desc }: any) {
 
 export default function HistoryClient() {
   const [districts, setDistricts] = useState<DistrictPoint[]>([]);
+  const [incidents, setIncidents] = useState<IncidentRecord[]>([]);
   const [selectedDistrictId, setSelectedDistrictId] = useState<string>("");
   const [dataMode, setDataMode] = useState<"daily" | "monthly">("monthly");
   const [mapMode, setMapMode] = useState<"temperature" | "humidity" | "wind">("temperature");
@@ -204,12 +206,19 @@ export default function HistoryClient() {
   const [isPlaying, setIsPlaying] = useState(false);
   const playIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Initial load: parse geojson to get districts
+  // Initial load: parse geojson to get districts and load incidents
   useEffect(() => {
-    async function initDistricts() {
+    async function initData() {
       try {
-        const res = await fetch("/data/bd_districts.geojson", { cache: "force-cache" });
+        const [res, incData] = await Promise.all([
+           fetch("/data/bd_districts.geojson", { cache: "force-cache" }),
+           loadIncidentsCsv()
+        ]);
+        
         if (!res.ok) throw new Error("Could not load district geometry");
+        
+        setIncidents(incData);
+
         const geodata = await res.json();
         const dList = parseDistricts(geodata);
         setDistricts(dList);
@@ -219,12 +228,12 @@ export default function HistoryClient() {
           setSelectedDistrictId(dhaka ? dhaka.id : dList[0].id);
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to parse districts.");
+        setError(err instanceof Error ? err.message : "Failed to initialized data.");
       } finally {
         setLoading(false);
       }
     }
-    initDistricts();
+    initData();
   }, []);
 
   // Fetch weather when district changes
@@ -472,7 +481,9 @@ export default function HistoryClient() {
           {currentSnapshot && (
             <HistoryMap 
               currentDate={dataMode === "monthly" ? currentSnapshot.time + "-01" : currentSnapshot.time}
+              dataMode={dataMode}
               activeMode={mapMode}
+              incidents={incidents}
             />
           )}
         </div>
