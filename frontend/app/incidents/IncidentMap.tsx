@@ -18,6 +18,7 @@ type DistrictFeatureCollection = {
 const DISTRICT_ALIAS: Record<string, string> = {
   barisal: "barishal",
   bogra: "bogura",
+  chapainawabganj: "nawabganj",
   chittagong: "chattogram",
   comilla: "cumilla",
   jessore: "jashore",
@@ -52,6 +53,10 @@ function jitterPoint(center: L.LatLng, order: number): L.LatLng {
     (Math.cos(angle) * distance) / Math.max(Math.cos((center.lat * Math.PI) / 180), 0.25);
 
   return L.latLng(lat, lng);
+}
+
+function hasCoordinates(incident: IncidentRecord): incident is IncidentRecord & { latitude: number; longitude: number } {
+  return Number.isFinite(incident.latitude) && Number.isFinite(incident.longitude);
 }
 
 export default function IncidentMap() {
@@ -111,15 +116,21 @@ export default function IncidentMap() {
 
   const incidentPoints = useMemo(() => {
     const counters: Record<string, number> = {};
+
     return incidents.flatMap((incident, index) => {
       const districtKey = canonicalDistrictName(incident.district || "");
-      const center = districtCentroids.get(districtKey);
-      if (!center) return [];
+      const districtCenter = districtCentroids.get(districtKey);
+      const basePoint = hasCoordinates(incident)
+        ? L.latLng(incident.latitude, incident.longitude)
+        : districtCenter;
+      if (!basePoint) return [];
 
-      const order = counters[districtKey] ?? 0;
-      counters[districtKey] = order + 1;
+      const pointKey = `${basePoint.lat.toFixed(5)}:${basePoint.lng.toFixed(5)}`;
+      const order = counters[pointKey] ?? 0;
+      counters[pointKey] = order + 1;
 
-      const point = jitterPoint(center, order);
+      const shouldJitter = order > 0 && incident.location_precision !== "place";
+      const point = shouldJitter ? jitterPoint(basePoint, order) : basePoint;
       return [
         {
           key: `${incident.id}-${index}`,

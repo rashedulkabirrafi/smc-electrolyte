@@ -21,8 +21,8 @@ export default function IncidentsPage({ searchParams }: IncidentsPageProps) {
     <main className={styles.page}>
       <h1 className={styles.title}>Heatstroke Incidents (News Reports)</h1>
       <p className={styles.subtitle}>
-        Filterable and sortable incident list from <code>/public/data</code>. Only incidents with direct source
-        links are shown.
+        Verified incident list from <code>/public/data</code>, sourced from direct newspaper links. Current
+        source-backed coverage in this dataset spans 2016 to 2024.
       </p>
       <IncidentMap />
       <IncidentTable initialDistrict={initialDistrict} />

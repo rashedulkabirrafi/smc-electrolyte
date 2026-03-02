@@ -5,6 +5,15 @@ import type { FeatureCollection, Geometry, Feature } from "geojson";
 import styles from "../app/history/history.module.css";
 import type { IncidentRecord } from "../lib/data";
 
+const DISTRICT_ALIAS: Record<string, string> = {
+  barisal: "barishal",
+  bogra: "bogura",
+  chapainawabganj: "nawabganj",
+  chittagong: "chattogram",
+  comilla: "cumilla",
+  jessore: "jashore",
+};
+
 // Helper color scale: from Blue (cool) -> Yellow (warm) -> Red (hot)
 function getTemperatureColor(temp: number) {
   if (temp < 15) return "#3b82f6"; // Blue
@@ -27,6 +36,28 @@ function getWindColor(wind: number) {
   if (wind < 15) return "#fbbf24"; // Breezy/Yellow
   if (wind < 25) return "#f97316"; // Windy/Orange
   return "#ef4444"; // Stormy/Red
+}
+
+function canonicalDistrictName(value: string): string {
+  const normalized = value.toLowerCase().replace(/[^a-z0-9]+/g, "").trim();
+  return DISTRICT_ALIAS[normalized] || normalized;
+}
+
+function hasCoordinates(incident: IncidentRecord): incident is IncidentRecord & { latitude: number; longitude: number } {
+  return Number.isFinite(incident.latitude) && Number.isFinite(incident.longitude);
+}
+
+function jitterPoint(lat: number, lon: number, order: number) {
+  if (order === 0) return { lat, lon };
+
+  const ring = Math.floor((order - 1) / 6) + 1;
+  const spoke = (order - 1) % 6;
+  const angle = (spoke / 6) * Math.PI * 2;
+  const distance = 0.04 * ring;
+
+  const jLat = lat + Math.sin(angle) * distance;
+  const jLon = lon + (Math.cos(angle) * distance) / Math.max(Math.cos((lat * Math.PI) / 180), 0.25);
+  return { lat: jLat, lon: jLon };
 }
 
 type MapProps = {
@@ -53,7 +84,7 @@ export default function HistoryMap({ currentDate, activeMode, dataMode = "monthl
         const cmap: Record<string, {lat: number, lon: number}> = {};
         for (const feature of data.features) {
           const rawName = feature.properties?.NAME_2 || feature.properties?.district || "";
-          const id = rawName.toLowerCase().replace(/[^a-z0-9]+/g, "").trim();
+          const id = canonicalDistrictName(rawName);
           
           let coords: any[] = [];
           const collect = (node: any) => {
@@ -110,6 +141,25 @@ export default function HistoryMap({ currentDate, activeMode, dataMode = "monthl
       }
     });
   }, [incidents, currentDate, dataMode]);
+
+  const activeIncidentMarkers = useMemo(() => {
+    const counters: Record<string, number> = {};
+
+    return activeIncidents.map((inc) => {
+      const districtId = canonicalDistrictName(inc.district || "");
+      const fallback = centroids[districtId] || { lat: 23.685, lon: 90.356 };
+      const base = hasCoordinates(inc)
+        ? { lat: inc.latitude, lon: inc.longitude }
+        : fallback;
+
+      const pointKey = `${base.lat.toFixed(5)}:${base.lon.toFixed(5)}`;
+      const order = counters[pointKey] ?? 0;
+      counters[pointKey] = order + 1;
+
+      const pos = inc.location_precision === "place" ? base : jitterPoint(base.lat, base.lon, order);
+      return { inc, pos };
+    });
+  }, [activeIncidents, centroids]);
 
   const styleFeature = (feature?: Feature<Geometry, any>) => {
     if (!feature) return {};
@@ -188,9 +238,7 @@ export default function HistoryMap({ currentDate, activeMode, dataMode = "monthl
         />
         
         {/* Render correlated incidents dynamically based on timeline */}
-        {activeIncidents.map(inc => {
-          const id = inc.district.toLowerCase().replace(/[^a-z0-9]+/g, "").trim();
-          const pos = centroids[id] || { lat: 23.685, lon: 90.356 }; // Fallback to bd center
+        {activeIncidentMarkers.map(({ inc, pos }) => {
           return (
             <CircleMarker 
               key={inc.id}

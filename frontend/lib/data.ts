@@ -12,6 +12,9 @@ export type IncidentRecord = {
   description: string;
   source_name: string;
   source_url: string;
+  latitude?: number;
+  longitude?: number;
+  location_precision?: string;
 };
 
 function normalizeText(value: string): string {
@@ -33,6 +36,7 @@ function normalizeDate(value: string): string {
 const DISTRICT_ALIAS: Record<string, string> = {
   barisal: "barishal",
   bogra: "bogura",
+  chapainawabganj: "nawabganj",
   chittagong: "chattogram",
   comilla: "cumilla",
   jessore: "jashore",
@@ -130,6 +134,8 @@ function dedupeIncidents(rows: IncidentRecord[]): IncidentRecord[] {
       String(row.dead || 0),
       String(row.sick || 0),
       String(row.casualties || 0),
+      Number.isFinite(row.latitude) ? row.latitude?.toFixed(6) : "",
+      Number.isFinite(row.longitude) ? row.longitude?.toFixed(6) : "",
       normalizeText(row.place),
       normalizeText(row.description),
       normalizeText(row.source_name),
@@ -204,6 +210,9 @@ export async function loadIncidentsCsv(): Promise<IncidentRecord[]> {
       description: row.description?.trim() || "",
       source_name: row.source_name?.trim() || "",
       source_url: row.source_url?.trim() || "",
+      latitude: toCoordinate(row.latitude ?? row.lat),
+      longitude: toCoordinate(row.longitude ?? row.lng ?? row.lon),
+      location_precision: row.location_precision?.trim() || "",
     };
   });
 
@@ -225,6 +234,19 @@ export function exportIncidentsCsv(rows: IncidentRecord[]): string {
       description: row.description,
       source_name: row.source_name,
       source_url: row.source_url,
+      latitude: row.latitude ?? "",
+      longitude: row.longitude ?? "",
+      location_precision: row.location_precision ?? "",
     }))
   );
+}
+
+function toCoordinate(value: string | number | undefined): number | undefined {
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : undefined;
+  }
+
+  if (!value) return undefined;
+  const parsed = Number.parseFloat(String(value).trim());
+  return Number.isFinite(parsed) ? parsed : undefined;
 }
