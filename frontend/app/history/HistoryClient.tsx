@@ -35,6 +35,21 @@ type WeatherRow = {
   windMax: number;
 };
 
+const MONTH_OPTIONS = [
+  { value: "01", label: "January" },
+  { value: "02", label: "February" },
+  { value: "03", label: "March" },
+  { value: "04", label: "April" },
+  { value: "05", label: "May" },
+  { value: "06", label: "June" },
+  { value: "07", label: "July" },
+  { value: "08", label: "August" },
+  { value: "09", label: "September" },
+  { value: "10", label: "October" },
+  { value: "11", label: "November" },
+  { value: "12", label: "December" },
+];
+
 // Extracted from bd_districts.geojson
 function isCoordinatePair(value: unknown): value is [number, number] {
   return Array.isArray(value) && value.length >= 2 && typeof value[0] === "number" && typeof value[1] === "number";
@@ -194,6 +209,9 @@ export default function HistoryClient() {
   const [selectedDistrictId, setSelectedDistrictId] = useState<string>("");
   const [dataMode, setDataMode] = useState<"daily" | "monthly">("monthly");
   const [mapMode, setMapMode] = useState<"temperature" | "humidity" | "wind">("temperature");
+  const [selectedYear, setSelectedYear] = useState<string>("all");
+  const [selectedMonth, setSelectedMonth] = useState<string>("all");
+  const [selectedDate, setSelectedDate] = useState<string>("all");
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -271,11 +289,115 @@ export default function HistoryClient() {
     return () => { cancelled = true; };
   }, [selectedDistrictId, districts, cache]);
 
-  const activeDataList = useMemo(() => {
+  const baseDataList = useMemo(() => {
     const dCache = cache[selectedDistrictId];
     if (!dCache) return [];
     return dataMode === "daily" ? dCache.daily : dCache.monthly;
   }, [cache, selectedDistrictId, dataMode]);
+
+  const yearOptions = useMemo(() => {
+    const years = new Set<string>();
+
+    for (const row of baseDataList) {
+      years.add(row.time.slice(0, 4));
+    }
+
+    return Array.from(years).sort((a, b) => Number(a) - Number(b));
+  }, [baseDataList]);
+
+  const dateOptions = useMemo(() => {
+    if (dataMode !== "daily") return [];
+
+    return baseDataList
+      .filter((row) => {
+        const rowYear = row.time.slice(0, 4);
+        const rowMonth = row.time.slice(5, 7);
+
+        if (selectedYear !== "all" && rowYear !== selectedYear) return false;
+        if (selectedMonth !== "all" && rowMonth !== selectedMonth) return false;
+        return true;
+      })
+      .map((row) => row.time);
+  }, [baseDataList, dataMode, selectedYear, selectedMonth]);
+
+  const matchesFilters = useCallback((row: WeatherRow) => {
+    const rowYear = row.time.slice(0, 4);
+    const rowMonth = row.time.slice(5, 7);
+
+    if (selectedYear !== "all" && rowYear !== selectedYear) return false;
+    if (selectedMonth !== "all" && rowMonth !== selectedMonth) return false;
+    if (dataMode === "daily" && selectedDate !== "all" && row.time !== selectedDate) return false;
+    return true;
+  }, [selectedYear, selectedMonth, dataMode, selectedDate]);
+
+  const matchedIndices = useMemo(() => {
+    const indices: number[] = [];
+    for (let i = 0; i < baseDataList.length; i++) {
+      if (matchesFilters(baseDataList[i])) {
+        indices.push(i);
+      }
+    }
+    return indices;
+  }, [baseDataList, matchesFilters]);
+
+  useEffect(() => {
+    if (selectedYear !== "all" && !yearOptions.includes(selectedYear)) {
+      setSelectedYear("all");
+    }
+  }, [selectedYear, yearOptions]);
+
+  useEffect(() => {
+    if (dataMode !== "daily" && selectedDate !== "all") {
+      setSelectedDate("all");
+      return;
+    }
+
+    if (dataMode === "daily" && selectedDate !== "all" && !dateOptions.includes(selectedDate)) {
+      setSelectedDate("all");
+    }
+  }, [dataMode, selectedDate, dateOptions]);
+
+  const activeDataList = baseDataList;
+
+  const formatMetricDate = useCallback((time: string) => {
+    if (dataMode === "monthly") {
+      return new Date(`${time}-01`).toLocaleDateString("en-US", { month: "long", year: "numeric" });
+    }
+    return new Date(time).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" });
+  }, [dataMode]);
+
+  const formatRangeDate = useCallback((time: string) => {
+    if (dataMode === "monthly") {
+      return new Date(`${time}-01`).toLocaleDateString("en-US", { month: "short", year: "numeric" });
+    }
+    return new Date(time).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  }, [dataMode]);
+
+  const timelineStartLabel = activeDataList[0] ? formatRangeDate(activeDataList[0].time) : "-";
+  const timelineEndLabel = activeDataList.length > 0 ? formatRangeDate(activeDataList[activeDataList.length - 1].time) : "-";
+
+  const hasDateFilter = selectedYear !== "all" || selectedMonth !== "all" || (dataMode === "daily" && selectedDate !== "all");
+
+  useEffect(() => {
+    if (!hasDateFilter || activeDataList.length === 0) return;
+
+    setIsPlaying(false);
+    if (matchedIndices.length > 0) {
+      setCurrentIndex(matchedIndices[0]);
+    }
+  }, [hasDateFilter, matchedIndices, activeDataList.length]);
+
+  useEffect(() => {
+    if (activeDataList.length === 0) {
+      setCurrentIndex(0);
+      setIsPlaying(false);
+      return;
+    }
+
+    if (currentIndex > activeDataList.length - 1) {
+      setCurrentIndex(activeDataList.length - 1);
+    }
+  }, [activeDataList.length, currentIndex]);
 
   // Handle Play/Pause timer
   useEffect(() => {
@@ -314,7 +436,6 @@ export default function HistoryClient() {
   };
 
   const currentSnapshot = activeDataList[currentIndex];
-
   if (activeDataList.length === 0 && !loading && !error) {
     return <div className={styles.placeholder}>Waiting for data...</div>;
   }
@@ -363,6 +484,77 @@ export default function HistoryClient() {
               </button>
             </div>
           </div>
+
+          <div className={styles.filterSection}>
+            <span className={styles.label}>Date Filters</span>
+
+            <label className={styles.label} htmlFor="yearFilter">Year</label>
+            <select
+              id="yearFilter"
+              className={styles.select}
+              value={selectedYear}
+              onChange={(e) => {
+                setIsPlaying(false);
+                setSelectedYear(e.target.value);
+                setSelectedDate("all");
+              }}
+              disabled={loading}
+            >
+              <option value="all">All Years</option>
+              {yearOptions.map((year) => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+
+            <label className={styles.label} htmlFor="monthFilter">Month</label>
+            <select
+              id="monthFilter"
+              className={styles.select}
+              value={selectedMonth}
+              onChange={(e) => {
+                setIsPlaying(false);
+                setSelectedMonth(e.target.value);
+                setSelectedDate("all");
+              }}
+              disabled={loading}
+            >
+              <option value="all">All Months</option>
+              {MONTH_OPTIONS.map((month) => (
+                <option key={month.value} value={month.value}>{month.label}</option>
+              ))}
+            </select>
+
+            {dataMode === "daily" && (
+              <>
+                <label className={styles.label} htmlFor="dateFilter">Date</label>
+                <select
+                  id="dateFilter"
+                  className={styles.select}
+                  value={selectedDate}
+                  onChange={(e) => {
+                    setIsPlaying(false);
+                    setSelectedDate(e.target.value);
+                  }}
+                  disabled={loading || dateOptions.length === 0}
+                >
+                  <option value="all">All Dates</option>
+                  {dateOptions.map((date) => (
+                    <option key={date} value={date}>
+                      {new Date(date).toLocaleDateString("en-US", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </option>
+                  ))}
+                </select>
+              </>
+            )}
+
+            {hasDateFilter && matchedIndices.length === 0 && (
+              <div className={styles.filterHint}>No exact match found in current timeline.</div>
+            )}
+          </div>
         </div>
 
         <div className={styles.panel}>
@@ -372,9 +564,7 @@ export default function HistoryClient() {
           ) : currentSnapshot ? (
             <div className={styles.metricGrid}>
               <div className={styles.metricDate}>
-                {dataMode === "monthly" 
-                  ? new Date(currentSnapshot.time + "-01").toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
-                  : new Date(currentSnapshot.time).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}
+                {formatMetricDate(currentSnapshot.time)}
               </div>
               
               <IndicatorRow 
@@ -452,8 +642,8 @@ export default function HistoryClient() {
                 disabled={activeDataList.length === 0}
               />
               <div className={styles.sliderDates}>
-                <span>2010-01</span>
-                <span>Today</span>
+                <span>{timelineStartLabel}</span>
+                <span>{timelineEndLabel}</span>
               </div>
             </div>
           </div>

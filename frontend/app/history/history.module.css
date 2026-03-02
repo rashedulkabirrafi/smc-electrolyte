@@ -137,6 +137,23 @@
   color: #fff;
 }
 
+.filterSection {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filterSection .label {
+  margin-bottom: 0;
+}
+
+.filterHint {
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
 /* Live Metrics Display */
 .metricDate {
   font-size: 1.5rem;
