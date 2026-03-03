@@ -7,8 +7,6 @@ import styles from "./Navbar.module.css";
 export default function Navbar() {
   const pathname = usePathname();
   const isHome = pathname === "/";
-  const isIncidents = pathname.startsWith("/incidents");
-  const isHistory = pathname.startsWith("/history");
 
   return (
     <header className={styles.nav}>
@@ -29,20 +27,6 @@ export default function Navbar() {
             aria-current={isHome ? "page" : undefined}
           >
             Home
-          </Link>
-          <Link
-            href="/incidents"
-            className={`${styles.link} ${isIncidents ? styles.active : ""}`}
-            aria-current={isIncidents ? "page" : undefined}
-          >
-            Incidents
-          </Link>
-          <Link
-            href="/history"
-            className={`${styles.link} ${isHistory ? styles.active : ""}`}
-            aria-current={isHistory ? "page" : undefined}
-          >
-            History
           </Link>
         </nav>
       </div>

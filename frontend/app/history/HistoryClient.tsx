@@ -465,26 +465,6 @@ export default function HistoryClient() {
             ))}
           </select>
 
-          <div style={{ marginTop: '1.25rem' }}>
-            <span className={styles.label}>Aggregation</span>
-            <div className={styles.toggleGroup}>
-              <button
-                className={`${styles.toggleBtn} ${dataMode === "daily" ? styles.toggleBtnActive : ""}`}
-                onClick={() => { setIsPlaying(false); setDataMode("daily"); setCurrentIndex(0); }}
-                disabled={loading}
-              >
-                Daily
-              </button>
-              <button
-                className={`${styles.toggleBtn} ${dataMode === "monthly" ? styles.toggleBtnActive : ""}`}
-                onClick={() => { setIsPlaying(false); setDataMode("monthly"); setCurrentIndex(0); }}
-                disabled={loading}
-              >
-                Monthly
-              </button>
-            </div>
-          </div>
-
           <div className={styles.filterSection}>
             <span className={styles.label}>Date Filters</span>
 
