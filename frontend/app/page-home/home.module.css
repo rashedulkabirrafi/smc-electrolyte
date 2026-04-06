@@ -53,10 +53,10 @@
   z-index: 5;
   width: min(18rem, calc(100% - 2rem));
   padding: 1rem;
-  border: 1px solid rgba(249, 115, 22, 0.28);
+  border: 1px solid rgba(37, 99, 235, 0.28);
   border-radius: var(--radius-xl);
   background:
-    linear-gradient(180deg, rgba(249, 115, 22, 0.12), transparent 40%),
+    linear-gradient(180deg, rgba(37, 99, 235, 0.12), transparent 40%),
     rgba(20, 20, 22, 0.94);
   box-shadow: var(--shadow-lg);
   backdrop-filter: blur(22px);
@@ -196,8 +196,8 @@
   align-items: center;
   padding: 0.18rem 0.55rem;
   border-radius: var(--radius-pill);
-  background: rgba(249, 115, 22, 0.12);
-  color: #fdba74;
+  background: rgba(37, 99, 235, 0.12);
+  color: #93c5fd;
   font-size: 0.72rem;
 }
 

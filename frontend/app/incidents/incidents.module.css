@@ -78,7 +78,7 @@
 .filterGroup input:focus,
 .filterGroup select:focus {
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
 .filterGroup select option {

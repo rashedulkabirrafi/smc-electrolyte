@@ -8,9 +8,9 @@
   --bg-subtle: #28282e;
   --bg-glass: rgba(20, 20, 22, 0.82);
 
-  --accent-primary: #f97316;
-  --accent-secondary: #fb923c;
-  --accent-muted: #431407;
+  --accent-primary: #2563eb;
+  --accent-secondary: #60a5fa;
+  --accent-muted: #172554;
 
   --tier-0: #3b82f6;
   --tier-1: #22c55e;
@@ -29,7 +29,7 @@
   --border-default: rgba(255, 255, 255, 0.1);
   --border-strong: rgba(255, 255, 255, 0.18);
   --accent-danger: #ef4444;
-  --accent-glow: rgba(249, 115, 22, 0.24);
+  --accent-glow: rgba(37, 99, 235, 0.24);
 
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -40,7 +40,7 @@
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.6), 0 8px 20px rgba(0, 0, 0, 0.4);
-  --shadow-glow-accent: 0 0 24px rgba(249, 115, 22, 0.15);
+  --shadow-glow-accent: 0 0 24px rgba(37, 99, 235, 0.15);
 
   --font-display: "Instrument Serif", "Georgia", serif;
   --font-body: "DM Sans", system-ui, sans-serif;

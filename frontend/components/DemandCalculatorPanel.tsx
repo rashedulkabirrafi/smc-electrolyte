@@ -123,7 +123,7 @@ export function DemandCalculatorPanel({
                   padding: "0.8rem 0.2rem",
                   border: "none",
                   borderBottom: "1px solid var(--border-subtle)",
-                  background: district.pcode === selectedDistrict?.pcode ? "rgba(214, 160, 75, 0.08)" : "transparent",
+                  background: district.pcode === selectedDistrict?.pcode ? "rgba(37, 99, 235, 0.08)" : "transparent",
                   color: "inherit",
                   textAlign: "left",
                   cursor: "pointer",
@@ -203,7 +203,7 @@ function SummaryStat({
       style={{
         padding: "0.8rem 0.9rem",
         borderRadius: "var(--radius-md)",
-        border: accent ? "1px solid rgba(214, 160, 75, 0.32)" : "1px solid var(--border-subtle)",
+        border: accent ? "1px solid rgba(37, 99, 235, 0.32)" : "1px solid var(--border-subtle)",
         background: "rgba(243, 239, 232, 0.03)",
       }}
     >
