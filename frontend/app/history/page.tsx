@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
-import { AlertBanner } from "../../components/ui/AlertBanner";
-import { Button } from "../../components/ui/Button";
 import { DisclaimerBanner } from "../../components/ui/DisclaimerBanner";
 
 const HistoryClient = dynamic(() => import("./HistoryClient"), {
@@ -20,21 +18,10 @@ export default function HistoryPage() {
       <div className="page-header">
         <div>
           <div className="page-kicker">Forecasts</div>
-          <h1 className="page-title">Scenario forecasting with historical context</h1>
-          <p className="page-subtitle">
-            Explore district-level weather history, anomaly context, and scenario playback tuned for planning and activation workflows.
-          </p>
-        </div>
-        <div className="page-actions">
-          <Button type="button" variant="secondary">Switch vintage</Button>
+          <h1 className="page-title">Historical Forecasts</h1>
+          <p className="page-subtitle">District history, anomalies, and timeline playback. Historical reanalysis baseline for planning context.</p>
         </div>
       </div>
-
-      <AlertBanner
-        variant="info"
-        title="Scenario playback surface"
-        description="Historical reanalysis is used here as the trusted baseline. Use this view for planning context, not medical interpretation."
-      />
       <HistoryClient />
 
       <DisclaimerBanner>

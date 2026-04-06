@@ -215,6 +215,15 @@
   min-height: 118px;
   gap: 0.45rem;
   padding: 0.58rem 0.72rem;
+  justify-content: center;
+}
+
+.statCardHeader {
+  align-items: center;
+}
+
+.statCardBody {
+  gap: 0.25rem;
 }
 
 .statAccent {
@@ -240,7 +249,6 @@
 }
 
 .statMeta {
-  margin-top: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;

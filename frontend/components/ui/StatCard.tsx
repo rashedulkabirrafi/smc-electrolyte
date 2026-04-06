@@ -36,14 +36,14 @@ export function StatCard({
   return (
     <Card className={`${styles.statCard} ${className}`.trim()} variant="elevated">
       <span className={styles.statAccent} style={{ backgroundColor: accentColor }} aria-hidden />
-      <CardHeader>
+      <CardHeader className={styles.statCardHeader}>
         <div>
           <p className={styles.statLabel}>{label}</p>
           <div className={styles.statValue}>{value}</div>
         </div>
         <div style={{ color: "var(--text-tertiary)" }}>{icon}</div>
       </CardHeader>
-      <CardBody>
+      <CardBody className={styles.statCardBody}>
         <div className={styles.statMeta}>
           <span className={`${styles.trend} ${trendClass}`.trim()}>
             <span aria-hidden>{trendArrow}</span>
