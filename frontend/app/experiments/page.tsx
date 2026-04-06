@@ -1,6 +1,8 @@
+import Link from "next/link";
+
 import { FlaskIcon } from "../../components/icons";
-import { EmptyState } from "../../components/ui/EmptyState";
 import { Button } from "../../components/ui/Button";
+import { Card, CardBody, CardHeader, CardHeaderMeta, CardTitle, CardCaption } from "../../components/ui/Card";
 
 export default function ExperimentsPage() {
   return (
@@ -15,13 +17,53 @@ export default function ExperimentsPage() {
         </div>
       </div>
 
-      <div className="grid-span-12">
-        <EmptyState
-          icon={<FlaskIcon width={28} height={28} />}
-          title="No experiments are published yet"
-          description="This area is reserved for future scenario analysis and experiment readouts."
-          action={<Button variant="secondary" type="button">Check Data Freshness</Button>}
-        />
+      <div className="dashboard-grid">
+        <div className="grid-span-6">
+          <Card variant="elevated">
+            <CardHeader>
+              <CardHeaderMeta>
+                <CardTitle>Population Density</CardTitle>
+                <CardCaption>Explore the new 3D district spike surface built from Bangladesh 2022 census density.</CardCaption>
+              </CardHeaderMeta>
+            </CardHeader>
+            <CardBody>
+              <Link href="/population-density">
+                <Button variant="primary" type="button">Open 3D density map</Button>
+              </Link>
+            </CardBody>
+          </Card>
+        </div>
+        <div className="grid-span-6">
+          <Card variant="accent">
+            <CardHeader>
+              <CardHeaderMeta>
+                <CardTitle>Heat × Population</CardTitle>
+                <CardCaption>Review where district heat tiers and population density combine into higher demand pressure.</CardCaption>
+              </CardHeaderMeta>
+            </CardHeader>
+            <CardBody>
+              <Link href="/heat-population">
+                <Button variant="primary" type="button">Open combined overlay</Button>
+              </Link>
+            </CardBody>
+          </Card>
+        </div>
+        <div className="grid-span-12">
+          <Card variant="default">
+            <CardHeader>
+              <CardHeaderMeta>
+                <CardTitle>Sandbox</CardTitle>
+                <CardCaption>Prototype surfaces for alternate models, uplift simulations, and evaluation reports live here.</CardCaption>
+              </CardHeaderMeta>
+            </CardHeader>
+            <CardBody>
+              <div className="surface-inline">
+                <FlaskIcon width={16} height={16} />
+                <span>New population and combined heat overlays are now available from this sandbox hub.</span>
+              </div>
+            </CardBody>
+          </Card>
+        </div>
       </div>
     </main>
   );

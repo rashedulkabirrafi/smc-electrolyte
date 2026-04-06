@@ -1,0 +1,66 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 24rem;
+  gap: 1rem;
+}
+
+.mapCard {
+  min-height: 44rem;
+}
+
+.mapBody {
+  min-height: 38rem;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.summaryCard {
+  padding: 0.85rem 0.9rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background: rgba(243, 239, 232, 0.03);
+}
+
+.summaryLabel {
+  color: var(--text-tertiary);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.summaryValue {
+  margin-top: 0.35rem;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.summarySub {
+  margin-top: 0.2rem;
+  color: var(--text-tertiary);
+  font-size: 0.72rem;
+}
+
+.sideStack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (max-width: 1279px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  .summaryGrid {
+    grid-template-columns: 1fr;
+  }
+}
+

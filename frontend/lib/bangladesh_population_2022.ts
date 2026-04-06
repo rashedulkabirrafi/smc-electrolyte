@@ -1,0 +1,78 @@
+export type BangladeshDistrictPopulation2022 = {
+  district: string;
+  pcode: string;
+  division: string;
+  population: number;
+  area_km2: number;
+  density: number;
+};
+
+// Source: Bangladesh Bureau of Statistics, Population & Housing Census 2022.
+// Reference date: June 15, 2022. Density values are persons per km².
+export const BANGLADESH_DISTRICT_POPULATION_2022: BangladeshDistrictPopulation2022[] = [
+  { district: "Dhaka", pcode: "BGD047", division: "Dhaka", population: 10278882, area_km2: 1463.6, density: 7022 },
+  { district: "Narayanganj", pcode: "BGD033", division: "Dhaka", population: 3223890, area_km2: 759.6, density: 4244 },
+  { district: "Gazipur", pcode: "BGD018", division: "Dhaka", population: 3403912, area_km2: 1741.5, density: 1954 },
+  { district: "Faridpur", pcode: "BGD015", division: "Dhaka", population: 2065138, area_km2: 2073.0, density: 996 },
+  { district: "Tangail", pcode: "BGD062", division: "Dhaka", population: 3858906, area_km2: 3414.3, density: 1130 },
+  { district: "Munshiganj", pcode: "BGD030", division: "Dhaka", population: 1583792, area_km2: 954.9, density: 1659 },
+  { district: "Manikganj", pcode: "BGD032", division: "Dhaka", population: 1493522, area_km2: 1378.9, density: 1083 },
+  { district: "Narsingdi", pcode: "BGD034", division: "Dhaka", population: 2386972, area_km2: 1141.3, density: 2091 },
+  { district: "Kishoreganj", pcode: "BGD028", division: "Dhaka", population: 3241611, area_km2: 2688.9, density: 1206 },
+  { district: "Madaripur", pcode: "BGD048", division: "Dhaka", population: 1219392, area_km2: 1144.6, density: 1065 },
+  { district: "Shariatpur", pcode: "BGD058", division: "Dhaka", population: 1215619, area_km2: 1182.0, density: 1028 },
+  { district: "Gopalganj", pcode: "BGD017", division: "Dhaka", population: 1171614, area_km2: 1490.3, density: 786 },
+  { district: "Rajbari", pcode: "BGD050", division: "Dhaka", population: 1087047, area_km2: 1118.8, density: 972 },
+  { district: "Mymensingh", pcode: "BGD031", division: "Mymensingh", population: 4095547, area_km2: 4363.5, density: 939 },
+  { district: "Netrakona", pcode: "BGD035", division: "Mymensingh", population: 2293014, area_km2: 2810.1, density: 816 },
+  { district: "Jamalpur", pcode: "BGD021", division: "Mymensingh", population: 2403942, area_km2: 2031.9, density: 1183 },
+  { district: "Sherpur", pcode: "BGD057", division: "Mymensingh", population: 1384946, area_km2: 1364.7, density: 1015 },
+  { district: "Chattogram", pcode: "BGD010", division: "Chattogram", population: 8439587, area_km2: 5282.9, density: 1597 },
+  { district: "Cumilla", pcode: "BGD012", division: "Chattogram", population: 6207198, area_km2: 3086.2, density: 2012 },
+  { district: "Brahmanbaria", pcode: "BGD009", division: "Chattogram", population: 2986040, area_km2: 1928.0, density: 1549 },
+  { district: "Chandpur", pcode: "BGD013", division: "Chattogram", population: 2424990, area_km2: 1704.1, density: 1423 },
+  { district: "Feni", pcode: "BGD016", division: "Chattogram", population: 1478513, area_km2: 924.7, density: 1599 },
+  { district: "Lakshmipur", pcode: "BGD029", division: "Chattogram", population: 1728827, area_km2: 1535.9, density: 1126 },
+  { district: "Noakhali", pcode: "BGD036", division: "Chattogram", population: 3474061, area_km2: 3685.7, density: 942 },
+  { district: "Cox's Bazar", pcode: "BGD011", division: "Chattogram", population: 2644668, area_km2: 2491.9, density: 1061 },
+  { district: "Khagrachhari", pcode: "BGD026", division: "Chattogram", population: 620214, area_km2: 2699.5, density: 230 },
+  { district: "Rangamati", pcode: "BGD056", division: "Chattogram", population: 618459, area_km2: 6116.1, density: 101 },
+  { district: "Bandarban", pcode: "BGD004", division: "Chattogram", population: 472025, area_km2: 4479.1, density: 105 },
+  { district: "Khulna", pcode: "BGD027", division: "Khulna", population: 2318527, area_km2: 4394.5, density: 528 },
+  { district: "Jashore", pcode: "BGD022", division: "Khulna", population: 2913671, area_km2: 2606.9, density: 1117 },
+  { district: "Narail", pcode: "BGD037", division: "Khulna", population: 771649, area_km2: 990.2, density: 779 },
+  { district: "Jhenaidah", pcode: "BGD024", division: "Khulna", population: 1812956, area_km2: 1964.4, density: 923 },
+  { district: "Magura", pcode: "BGD046", division: "Khulna", population: 940278, area_km2: 1039.6, density: 904 },
+  { district: "Satkhira", pcode: "BGD054", division: "Khulna", population: 2073046, area_km2: 3858.3, density: 537 },
+  { district: "Bagerhat", pcode: "BGD003", division: "Khulna", population: 1593000, area_km2: 3959.1, density: 402 },
+  { district: "Chuadanga", pcode: "BGD042", division: "Khulna", population: 1153450, area_km2: 1174.1, density: 982 },
+  { district: "Meherpur", pcode: "BGD039", division: "Khulna", population: 669769, area_km2: 716.1, density: 935 },
+  { district: "Kushtia", pcode: "BGD040", division: "Khulna", population: 1964897, area_km2: 1608.8, density: 1221 },
+  { district: "Rajshahi", pcode: "BGD049", division: "Rajshahi", population: 2523004, area_km2: 2425.0, density: 1040 },
+  { district: "Bogura", pcode: "BGD008", division: "Rajshahi", population: 3596088, area_km2: 2919.9, density: 1231 },
+  { district: "Pabna", pcode: "BGD038", division: "Rajshahi", population: 2601390, area_km2: 2371.0, density: 1097 },
+  { district: "Sirajganj", pcode: "BGD059", division: "Rajshahi", population: 3242956, area_km2: 2497.9, density: 1298 },
+  { district: "Natore", pcode: "BGD041", division: "Rajshahi", population: 1741002, area_km2: 1901.0, density: 916 },
+  { district: "Nawabganj", pcode: "BGD043", division: "Rajshahi", population: 1673896, area_km2: 1702.6, density: 983 },
+  { district: "Naogaon", pcode: "BGD044", division: "Rajshahi", population: 2803386, area_km2: 3435.7, density: 816 },
+  { district: "Joypurhat", pcode: "BGD023", division: "Rajshahi", population: 982789, area_km2: 965.4, density: 1018 },
+  { district: "Rangpur", pcode: "BGD055", division: "Rangpur", population: 2878831, area_km2: 2308.7, density: 1247 },
+  { district: "Dinajpur", pcode: "BGD014", division: "Rangpur", population: 3045398, area_km2: 3444.4, density: 884 },
+  { district: "Gaibandha", pcode: "BGD071", division: "Rangpur", population: 2449032, area_km2: 2178.7, density: 1124 },
+  { district: "Kurigram", pcode: "BGD072", division: "Rangpur", population: 2135527, area_km2: 2296.1, density: 930 },
+  { district: "Lalmonirhat", pcode: "BGD073", division: "Rangpur", population: 1290229, area_km2: 1240.0, density: 1040 },
+  { district: "Nilphamari", pcode: "BGD074", division: "Rangpur", population: 1837693, area_km2: 1542.9, density: 1191 },
+  { district: "Thakurgaon", pcode: "BGD075", division: "Rangpur", population: 1417468, area_km2: 1809.5, density: 783 },
+  { district: "Panchagarh", pcode: "BGD076", division: "Rangpur", population: 1002614, area_km2: 1404.6, density: 714 },
+  { district: "Sylhet", pcode: "BGD060", division: "Sylhet", population: 3482229, area_km2: 3490.4, density: 998 },
+  { district: "Sunamganj", pcode: "BGD061", division: "Sylhet", population: 2469084, area_km2: 3669.6, density: 673 },
+  { district: "Habiganj", pcode: "BGD019", division: "Sylhet", population: 2028809, area_km2: 2636.6, density: 769 },
+  { district: "Moulvibazar", pcode: "BGD045", division: "Sylhet", population: 1913985, area_km2: 2799.4, density: 684 },
+  { district: "Barishal", pcode: "BGD006", division: "Barishal", population: 2373075, area_km2: 2784.5, density: 852 },
+  { district: "Bhola", pcode: "BGD007", division: "Barishal", population: 1888282, area_km2: 3403.5, density: 555 },
+  { district: "Patuakhali", pcode: "BGD051", division: "Barishal", population: 1708774, area_km2: 3221.3, density: 530 },
+  { district: "Pirojpur", pcode: "BGD052", division: "Barishal", population: 1028778, area_km2: 1278.7, density: 805 },
+  { district: "Jhalokati", pcode: "BGD053", division: "Barishal", population: 683819, area_km2: 713.0, density: 959 },
+  { district: "Barguna", pcode: "BGD005", division: "Barishal", population: 967049, area_km2: 1831.1, density: 528 },
+];
+

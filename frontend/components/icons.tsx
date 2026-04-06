@@ -197,3 +197,16 @@ export function LayersIcon(props: IconProps) {
     </BaseIcon>
   );
 }
+
+export function UsersIcon(props: IconProps) {
+  return (
+    <BaseIcon {...props}>
+      <path d="M16 20a4 4 0 0 0-8 0" />
+      <circle cx="12" cy="10" r="3" />
+      <path d="M21 20a3.5 3.5 0 0 0-4-3.4" />
+      <path d="M3 20a3.5 3.5 0 0 1 4-3.4" />
+      <path d="M17 7.2a2.6 2.6 0 1 1 0 5.2" />
+      <path d="M7 7.2a2.6 2.6 0 1 0 0 5.2" />
+    </BaseIcon>
+  );
+}

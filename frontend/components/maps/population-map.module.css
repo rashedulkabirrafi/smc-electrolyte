@@ -1,0 +1,160 @@
+.mapShell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 32rem;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-default);
+  background:
+    radial-gradient(circle at top right, rgba(133, 108, 240, 0.12), transparent 28%),
+    radial-gradient(circle at left 24%, rgba(238, 79, 154, 0.12), transparent 32%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(246, 241, 248, 0.98));
+  box-shadow: 0 20px 48px rgba(5, 8, 15, 0.18), 0 8px 20px rgba(17, 24, 39, 0.12);
+}
+
+.deckCanvas {
+  position: absolute;
+  inset: 0;
+}
+
+.tooltip {
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+  min-width: 14rem;
+  padding: 0.9rem 1rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(89, 95, 134, 0.18);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 18px 40px rgba(24, 33, 52, 0.16);
+}
+
+.tooltipTitle {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #171923;
+}
+
+.tooltipMeta {
+  margin-top: 0.18rem;
+  color: #6b5ea7;
+  font-size: 0.75rem;
+}
+
+.tooltipRows {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.8rem;
+}
+
+.tooltipRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.tooltipLabel {
+  color: #5d6478;
+  font-size: 0.72rem;
+}
+
+.tooltipValue {
+  color: #171923;
+  font-size: 0.76rem;
+  font-weight: 500;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.legend {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 15;
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.9rem 1rem;
+  min-width: 14rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(89, 95, 134, 0.18);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 18px 40px rgba(24, 33, 52, 0.14);
+}
+
+.legendTitle {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #6c7391;
+}
+
+.legendGradient {
+  width: 100%;
+  height: 0.55rem;
+  border-radius: 999px;
+}
+
+.legendLabels {
+  display: flex;
+  justify-content: space-between;
+  color: #6c7391;
+  font-size: 0.68rem;
+}
+
+.legendList {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.legendItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.76rem;
+}
+
+.legendItemName {
+  color: #31384a;
+}
+
+.legendItemValue {
+  color: #171923;
+  font-family: var(--font-mono);
+}
+
+.controlStack {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 15;
+  display: inline-flex;
+  gap: 0.55rem;
+}
+
+.overlayPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.48rem 0.72rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(89, 95, 134, 0.18);
+  background: rgba(255, 255, 255, 0.82);
+  color: #485065;
+  font-size: 0.76rem;
+  box-shadow: 0 10px 22px rgba(24, 33, 52, 0.12);
+}
+
+@media (max-width: 1023px) {
+  .mapShell {
+    min-height: 28rem;
+  }
+
+  .legend {
+    left: 0.85rem;
+    right: 0.85rem;
+    min-width: 0;
+  }
+}

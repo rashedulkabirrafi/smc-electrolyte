@@ -18,6 +18,7 @@ import {
   PanelLeftIcon,
   TrendingUpIcon,
   UserIcon,
+  UsersIcon,
   ZapIcon,
 } from "./icons";
 import { DataFreshness, type FreshnessItem } from "./ui/DataFreshness";
@@ -29,6 +30,8 @@ const navItems = [
   { href: "/forecasts", label: "Forecasts", icon: TrendingUpIcon },
   { href: "/incidents", label: "Incidents", icon: AlertTriangleIcon },
   { href: "/triggers", label: "Trigger Builder", icon: ZapIcon },
+  { href: "/population-density", label: "Population Density", icon: UsersIcon },
+  { href: "/heat-population", label: "Heat × Population", icon: LayersIcon },
   { href: "/experiments", label: "Experiments", icon: FlaskIcon },
 ] as const;
 
@@ -47,6 +50,8 @@ const pageTitles: Record<string, string> = {
   "/history": "Forecasts",
   "/incidents": "Incidents",
   "/triggers": "Trigger Builder",
+  "/population-density": "Population Density",
+  "/heat-population": "Heat × Population",
   "/experiments": "Experiments",
 };
 
